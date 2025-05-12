@@ -58,5 +58,4 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = focus;
         Cursor.lockState = focus ? CursorLockMode.Locked : CursorLockMode.None;
     }
-
 }

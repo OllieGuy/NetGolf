@@ -76,7 +76,6 @@ public class PlayerMovement : MonoBehaviour
         
         verticalVelocity += gravity * characterWeight * Time.deltaTime;
         Vector3 velocity = new Vector3(currentVelocity.x, verticalVelocity, currentVelocity.z);
-        Debug.Log(velocity);
         charController.Move(velocity * Time.deltaTime);
     }
 
