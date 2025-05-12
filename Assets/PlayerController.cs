@@ -1,33 +1,61 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(PlayerMovement))]
 public class PlayerController : MonoBehaviour
 {
-    PlayerMovement pm;
+    public Vector2 moveInput;
+    public Vector2 lookInput;
+    public bool sprintInput;
+    public bool jumpInput;
 
-    void Start()
-    {
-        if (pm == null) pm = GetComponent<PlayerMovement>();
-    }
-
+#if ENABLE_INPUT_SYSTEM
     void OnMove(InputValue value)
     {
-        pm.moveInput = value.Get<Vector2>();
+        MoveInput(value.Get<Vector2>());
     }
 
     void OnLook(InputValue value)
     {
-        pm.lookInput = value.Get<Vector2>();
+        LookInput(value.Get<Vector2>());
     }
 
     void OnSprint(InputValue value)
     {
-        pm.sprintInput = value.isPressed;
+        SprintInput(value.isPressed);
     }
 
     void OnJump(InputValue value)
     {
-        pm.TryJump();
+        JumpInput(value.isPressed);
     }
+#endif
+
+    public void MoveInput(Vector2 moveDirection)
+    {
+        moveInput = moveDirection;
+    }
+
+    public void LookInput(Vector2 lookDirection)
+    {
+        lookInput = lookDirection;
+    }
+    public void SprintInput(bool sprintState)
+    {
+        sprintInput = sprintState;
+    }
+
+    public void JumpInput(bool jumpState)
+    {
+        jumpInput = jumpState;
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        Cursor.visible = focus;
+        Cursor.lockState = focus ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
 }

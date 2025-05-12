@@ -6,11 +6,8 @@ using static UnityEngine.Rendering.DebugUI;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Input")]
-    public Vector2 moveInput;
-    public Vector2 lookInput;
-    public bool sprintInput;
-    
+    PlayerController pc;
+
     [Header("Components")]
     [SerializeField] private CinemachineCamera fpCamera;
     private CharacterController charController;
@@ -20,8 +17,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintSpeed;
     [SerializeField] private float acceleration;
     [SerializeField] private float jumpHeight;
-    float currentSpeed => sprintInput ? sprintSpeed : speed;
-    bool isSprinting { get { return sprintInput && charController.velocity.sqrMagnitude > 0.1f; } }
+    float currentSpeed => pc.sprintInput ? sprintSpeed : speed;
+    bool isSprinting { get { return pc.sprintInput && charController.velocity.sqrMagnitude > 0.1f; } }
     
     [Header("Physics Parameters")]
     [SerializeField] private float gravity;
@@ -42,23 +39,24 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        if (pc == null) pc = GetComponent<PlayerController>();
         if (charController == null) charController = GetComponent<CharacterController>();
         camNormalFOV = fpCamera.Lens.FieldOfView;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     void Update()
     {
         MoveUpdate();
+        JumpUpdate();
         LookUpdate();
         CameraUpdate();
     }
 
     void MoveUpdate()
     {
-        Vector3 move = fpCamera.transform.forward * moveInput.y + fpCamera.transform.right * moveInput.x;
+        Vector3 move = fpCamera.transform.forward * pc.moveInput.y + fpCamera.transform.right * pc.moveInput.x;
         move.y = 0;
         move.Normalize();
 
@@ -82,9 +80,9 @@ public class PlayerMovement : MonoBehaviour
         charController.Move(velocity * Time.deltaTime);
     }
 
-    public void TryJump()
+    public void JumpUpdate()
     {
-        if (charController.isGrounded)
+        if (charController.isGrounded && pc.jumpInput)
         {
             verticalVelocity = Mathf.Sqrt(Mathf.Abs(jumpHeight * gravity * characterWeight));
         }
@@ -92,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
 
     void LookUpdate()
     {
-        Vector2 input = new Vector2(lookInput.x * lookSensitivity, lookInput.y * lookSensitivity);
+        Vector2 input = new Vector2(pc.lookInput.x * lookSensitivity, pc.lookInput.y * lookSensitivity);
         currentPitch = Mathf.Clamp(currentPitch - input.y, -pitchLimit, pitchLimit);
         fpCamera.transform.localRotation = Quaternion.Euler(currentPitch, 0, 0);
         transform.Rotate(Vector3.up * input.x);
