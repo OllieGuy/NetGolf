@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         lookInput = lookDirection;
     }
+
     public void SprintInput(bool sprintState)
     {
         sprintInput = sprintState;

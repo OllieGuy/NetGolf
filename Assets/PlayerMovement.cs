@@ -6,11 +6,10 @@ using static UnityEngine.Rendering.DebugUI;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    PlayerController pc;
-
     [Header("Components")]
     [SerializeField] private CinemachineCamera fpCamera;
-    private CharacterController charController;
+    [SerializeField] private CharacterController charController;
+    [SerializeField] private PlayerController pc;
 
     [Header("Movement Parameters")]
     [SerializeField] private float speed;
@@ -39,8 +38,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        if (pc == null) pc = GetComponent<PlayerController>();
-        if (charController == null) charController = GetComponent<CharacterController>();
+        //if (pc == null) pc = GetComponent<PlayerController>();
+        //if (charController == null) charController = GetComponent<CharacterController>();
+        //if (fpCamera == null) fpCamera = GetComponentInChildren<CinemachineCamera>();
         camNormalFOV = fpCamera.Lens.FieldOfView;
 
         //Cursor.visible = false;
@@ -76,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
         
         verticalVelocity += gravity * characterWeight * Time.deltaTime;
         Vector3 velocity = new Vector3(currentVelocity.x, verticalVelocity, currentVelocity.z);
-
+        Debug.Log(velocity);
         charController.Move(velocity * Time.deltaTime);
     }
 
@@ -85,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
         if (charController.isGrounded && pc.jumpInput)
         {
             verticalVelocity = Mathf.Sqrt(Mathf.Abs(jumpHeight * gravity * characterWeight));
+            pc.jumpInput = false;
         }
     }
 

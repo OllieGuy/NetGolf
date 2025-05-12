@@ -32,28 +32,29 @@ public class ClientPlayerInputs : NetworkBehaviour
             inputs.enabled = true;
             playerController.enabled = true;
             playerCamera.enabled = true;
+            playerMovement.enabled = true;
         }
         
         if (IsServer)
         {
-            playerMovement.enabled = true;
+            //playerMovement.enabled = true;
         }
     }
 
-    [Rpc(target:SendTo.Server)]
-    private void UpdateInputServerRpc(Vector2 move, Vector2 look, bool sprint, bool jump)
-    {
-        playerController.MoveInput(move);
-        playerController.LookInput(look);
-        playerController.SprintInput(sprint);
-        playerController.JumpInput(jump);
-    }
+    //[Rpc(target:SendTo.Server)]
+    //private void UpdateInputServerRpc(Vector2 move, Vector2 look, bool sprint, bool jump)
+    //{
+    //    playerController.MoveInput(move);
+    //    playerController.LookInput(look);
+    //    playerController.SprintInput(sprint);
+    //    playerController.JumpInput(jump);
+    //}
 
-    private void LateUpdate()
-    {
-        if (!IsOwner) 
-            return;
+    //private void LateUpdate()
+    //{
+    //    if (!IsOwner) 
+    //        return;
 
-        UpdateInputServerRpc(playerController.moveInput, playerController.lookInput, playerController.sprintInput, playerController.jumpInput);
-    }
+    //    UpdateInputServerRpc(playerController.moveInput, playerController.lookInput, playerController.sprintInput, playerController.jumpInput);
+    //}
 }

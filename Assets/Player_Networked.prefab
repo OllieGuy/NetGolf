@@ -260,10 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eade666f7090e474bab2d15d85f4bdab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveInput: {x: 0, y: 0}
-  lookInput: {x: 0, y: 0}
-  sprintInput: 0
   fpCamera: {fileID: 4181029037945261752}
+  charController: {fileID: 4901645066447926391}
+  pc: {fileID: 5957551148458008602}
   speed: 3.5
   sprintSpeed: 6
   acceleration: 15
@@ -286,6 +285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e202d71278f2c4f488716739eb6cb13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveInput: {x: 0, y: 0}
+  lookInput: {x: 0, y: 0}
+  sprintInput: 0
+  jumpInput: 0
 --- !u!114 &-6829526571379728520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,7 +351,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
