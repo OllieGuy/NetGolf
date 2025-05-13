@@ -3,15 +3,16 @@ using UnityEngine;
 
 public class PlayerPlaceBall : PlayerBaseMovement
 {
-    [SerializeField] private GameObject ballPreviewObject;
+    [SerializeField] private GameObject ballPreviewPrefab;
+    private GameObject ballPreviewObject;
     private BallPlacement ballPlacement;
 
     public override void StartState()
     {
         base.StartState();
-        ballPlacement = ballPreviewObject.GetComponent<BallPlacement>();
         if (ballPreviewObject != null) ballPreviewObject.SetActive(true);
-        else Instantiate(ballPreviewObject);
+        else ballPreviewObject = Instantiate(ballPreviewPrefab);
+        ballPlacement = ballPreviewObject.GetComponent<BallPlacement>();
     }
 
     public override void UpdateState()
@@ -36,7 +37,6 @@ public class PlayerPlaceBall : PlayerBaseMovement
     {
         if (pc.attackInput)
         {
-            pc.attackInput = false;
             ballPlacement.PlaceBall();
             ChangeState(PlayerStates.BaseMovement);
         }

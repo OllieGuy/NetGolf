@@ -54,6 +54,7 @@ public abstract class PlayerBaseState : MonoBehaviour
     protected PlayerController pc;
     protected GameObject playerObject;
     protected PlayerState stateMachine;
+    protected float currentPitch;
 
     public void SetValues(CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
     {

@@ -35,21 +35,4 @@ public class ClientPlayerInputs : NetworkBehaviour
             playerState.enabled = true;
         }
     }
-
-    //[Rpc(target:SendTo.Server)]
-    //private void UpdateInputServerRpc(Vector2 move, Vector2 look, bool sprint, bool jump)
-    //{
-    //    playerController.MoveInput(move);
-    //    playerController.LookInput(look);
-    //    playerController.SprintInput(sprint);
-    //    playerController.JumpInput(jump);
-    //}
-
-    //private void LateUpdate()
-    //{
-    //    if (!IsOwner) 
-    //        return;
-
-    //    UpdateInputServerRpc(playerController.moveInput, playerController.lookInput, playerController.sprintInput, playerController.jumpInput);
-    //}
 }

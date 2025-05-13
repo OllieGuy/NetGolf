@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9219849285283662919}
   - component: {fileID: 4181029037945261752}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FPCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1805727302714115696}
   - component: {fileID: -1360178214837532112}
   - component: {fileID: 6834898187706693803}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player_Networked
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -415,7 +415,7 @@ MonoBehaviour:
   characterWeight: 2
   camSprintFOVIncrease: 5
   sprintFOVSmooth: 20
-  ballPreviewObject: {fileID: 6864546094918944333, guid: 69c206f235296ef47a56131d5a029c20, type: 3}
+  ballPreviewPrefab: {fileID: 6864546094918944333, guid: 69c206f235296ef47a56131d5a029c20, type: 3}
 --- !u!114 &6834898187706693803
 MonoBehaviour:
   m_ObjectHideFlags: 0

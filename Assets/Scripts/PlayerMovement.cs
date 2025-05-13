@@ -17,7 +17,6 @@ public class PlayerBaseMovement : PlayerBaseState
     [Header("Look Parameters")]
     [SerializeField] protected float lookSensitivity;
     [SerializeField] protected float pitchLimit;
-    protected float currentPitch;
 
     [Header("Physics Parameters")]
     [SerializeField] private float gravity;
@@ -75,7 +74,6 @@ public class PlayerBaseMovement : PlayerBaseState
         if (charController.isGrounded && pc.jumpInput)
         {
             verticalVelocity = Mathf.Sqrt(Mathf.Abs(jumpHeight * gravity * characterWeight));
-            pc.jumpInput = false;
         }
     }
 
@@ -91,7 +89,6 @@ public class PlayerBaseMovement : PlayerBaseState
     {
         if (pc.interactInput)
         {
-            Debug.Log("int");
             ChangeState(PlayerStates.PlaceBall);
             pc.interactInput = false;
         }

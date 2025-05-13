@@ -14,8 +14,13 @@ public class BallPlacement : MonoBehaviour
         if (isPlaceable)
         {
             Instantiate(ball, transform.position, Quaternion.identity);
-            Destroy(this);
         }
+    }
+
+    private void OnEnable()
+    {
+        isPlaceable = false;
+        ballRenderer.material = unplaceableMaterial;
     }
 
     void OnTriggerEnter(Collider other)
@@ -24,7 +29,6 @@ public class BallPlacement : MonoBehaviour
         {
             isPlaceable = true;
             ballRenderer.material = placeableMaterial;
-            Debug.Log("in the box");
         }
     }
     
@@ -34,7 +38,6 @@ public class BallPlacement : MonoBehaviour
         {
             isPlaceable = false;
             ballRenderer.material = unplaceableMaterial;
-            Debug.Log("out the box");
         }
     }
 }

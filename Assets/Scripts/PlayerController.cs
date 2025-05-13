@@ -14,62 +14,32 @@ public class PlayerController : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        MoveInput(value.Get<Vector2>());
+        moveInput = value.Get<Vector2>();
     }
 
     void OnLook(InputValue value)
     {
-        LookInput(value.Get<Vector2>());
+        lookInput = value.Get<Vector2>();
     }
 
     void OnSprint(InputValue value)
     {
-        SprintInput(value.isPressed);
+        sprintInput = value.isPressed;
     }
 
     void OnJump(InputValue value)
     {
-        JumpInput(value.isPressed);
+        jumpInput = value.isPressed;
     }
     
     void OnInteract(InputValue value)
     {
-        InteractInput(value.isPressed);
+        interactInput = value.isPressed;
     }
     
     void OnAttack(InputValue value)
     {
-        AttackInput(value.isPressed);
-    }
-
-    public void MoveInput(Vector2 moveDirection)
-    {
-        moveInput = moveDirection;
-    }
-
-    public void LookInput(Vector2 lookDirection)
-    {
-        lookInput = lookDirection;
-    }
-
-    public void SprintInput(bool sprintState)
-    {
-        sprintInput = sprintState;
-    }
-
-    public void JumpInput(bool jumpState)
-    {
-        jumpInput = jumpState;
-    }
-    
-    public void InteractInput(bool interactState)
-    {
-        interactInput = interactState;
-    }
-
-    public void AttackInput(bool attackState)
-    {
-        attackInput = attackState;
+        attackInput = value.isPressed;
     }
 
     private void OnApplicationFocus(bool focus)
