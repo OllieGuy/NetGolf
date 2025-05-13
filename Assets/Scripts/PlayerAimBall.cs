@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerAimBall : PlayerState
+public class PlayerAimBall : PlayerBaseState
 {
     public override void StartState()
     {

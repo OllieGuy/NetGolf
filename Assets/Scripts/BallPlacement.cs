@@ -9,10 +9,6 @@ public class BallPlacement : MonoBehaviour
 
     bool isPlaceable = false;
 
-    private void Update()
-    {
-        Debug.Log("tttt");
-    }
     public void PlaceBall()
     {
         if (isPlaceable)

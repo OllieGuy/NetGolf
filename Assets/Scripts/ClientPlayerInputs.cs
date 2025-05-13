@@ -7,14 +7,14 @@ public class ClientPlayerInputs : NetworkBehaviour
 {
     private PlayerInput inputs;
     private PlayerController playerController;
-    private PlayerState playerState;
+    private PlayerBaseState playerState;
     private CinemachineCamera playerCamera;
 
     void Awake()
     {
         inputs = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
-        playerState = GetComponent<PlayerState>();
+        playerState = GetComponent<PlayerBaseState>();
         playerCamera = GetComponentInChildren<CinemachineCamera>();
 
         inputs.enabled = false;

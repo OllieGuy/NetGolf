@@ -4,58 +4,70 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour
 {
-    PlayerState currentState;
-    PlayerBaseMovement playerBaseMovement;
-    PlayerPlaceBall playerPlaceBall;
-    PlayerAimBall playerAimBall;
+    [Header("State References")]
+    [SerializeField] PlayerBaseMovement playerBaseMovement;
+    [SerializeField] PlayerPlaceBall playerPlaceBall;
+    [SerializeField] PlayerAimBall playerAimBall;
 
     [Header("Components")]
-    protected CinemachineCamera fpCamera;
-    protected CharacterController charController;
-    protected PlayerController pc;
+    [SerializeField] CinemachineCamera fpCamera;
+    [SerializeField] CharacterController charController;
+    [SerializeField] PlayerController pc;
 
-    Dictionary<PlayerStates, PlayerState> stateRefs;
+    private PlayerBaseState currentState;
+    private Dictionary<PlayerStates, PlayerBaseState> stateRefs;
 
     void Awake()
     {
-        playerBaseMovement = GetComponent<PlayerBaseMovement>();
-        playerPlaceBall = GetComponent<PlayerPlaceBall>();
-        playerAimBall = GetComponent<PlayerAimBall>();
-
-        fpCamera = GetComponentInChildren<CinemachineCamera>();
-        charController = GetComponent<CharacterController>();
-        pc = GetComponent<PlayerController>();
-
-        currentState = playerBaseMovement;
-        stateRefs = new Dictionary<PlayerStates, PlayerState>()
+        stateRefs = new Dictionary<PlayerStates, PlayerBaseState>
         {
             { PlayerStates.BaseMovement, playerBaseMovement },
             { PlayerStates.PlaceBall, playerPlaceBall },
-            { PlayerStates.AimBall, playerAimBall },
+            { PlayerStates.AimBall, playerAimBall }
         };
+
+        foreach (PlayerBaseState state in stateRefs.Values)
+        {
+            state.SetValues(fpCamera, charController, pc, gameObject, this);
+        }
+
+        ChangeState(PlayerStates.BaseMovement);
     }
 
     void Update()
     {
-        if (pc.interactInput)
-        {
-            Debug.Log("int");
-            ChangeState(PlayerStates.PlaceBall);
-            pc.interactInput = false;
-        }
-        currentState.UpdateState();
+        currentState?.UpdateState();
     }
 
     public void ChangeState(PlayerStates newState)
     {
-        currentState.ExitState();
+        currentState?.ExitState();
         currentState = stateRefs[newState];
         currentState.StartState();
     }
+}
 
-    public virtual void StartState() { }
-    public virtual void UpdateState() { }
-    public virtual void ExitState() { }
+public abstract class PlayerBaseState : MonoBehaviour
+{
+    protected CinemachineCamera fpCamera;
+    protected CharacterController charController;
+    protected PlayerController pc;
+    protected GameObject playerObject;
+    protected PlayerState stateMachine;
+
+    public void SetValues(CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
+    {
+        fpCamera = cam;
+        charController = controller;
+        pc = input;
+        playerObject = obj;
+        stateMachine = _stateMachine;
+    }
+
+    public abstract void StartState();
+    public abstract void UpdateState();
+    public abstract void ExitState();
+    protected void ChangeState(PlayerStates newState) => stateMachine.ChangeState(newState);
 }
 
 public enum PlayerStates

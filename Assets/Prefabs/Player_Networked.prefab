@@ -267,6 +267,7 @@ MonoBehaviour:
   lookInput: {x: 0, y: 0}
   sprintInput: 0
   jumpInput: 0
+  interactInput: 0
   attackInput: 0
 --- !u!114 &-6829526571379728520
 MonoBehaviour:
@@ -364,6 +365,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b367240854375145ad9942874414cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerBaseMovement: {fileID: 1805727302714115696}
+  playerPlaceBall: {fileID: -1360178214837532112}
+  playerAimBall: {fileID: 6834898187706693803}
+  fpCamera: {fileID: 4181029037945261752}
+  charController: {fileID: 4901645066447926391}
+  pc: {fileID: 5957551148458008602}
 --- !u!114 &1805727302714115696
 MonoBehaviour:
   m_ObjectHideFlags: 0

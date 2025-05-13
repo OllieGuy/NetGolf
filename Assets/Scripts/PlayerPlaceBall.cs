@@ -3,34 +3,41 @@ using UnityEngine;
 
 public class PlayerPlaceBall : PlayerBaseMovement
 {
-    [SerializeField] GameObject ballPreviewObject;
-    
-    BallPlacement ballPlacement;
+    [SerializeField] private GameObject ballPreviewObject;
+    private BallPlacement ballPlacement;
 
     public override void StartState()
     {
-        //base.StartState();
+        base.StartState();
         ballPlacement = ballPreviewObject.GetComponent<BallPlacement>();
+        if (ballPreviewObject != null) ballPreviewObject.SetActive(true);
+        else Instantiate(ballPreviewObject);
     }
+
     public override void UpdateState()
     {
         base.UpdateState();
-        PlaceUpdate();
         BallPreviewUpdate();
+        PlaceBallInput();
     }
 
-    void BallPreviewUpdate()
+    public override void ExitState()
     {
-        ballPreviewObject.transform.position = fpCamera.transform.position + fpCamera.transform.forward.normalized * 1f;
+        ballPreviewObject.SetActive(false);
+    }
+
+    private void BallPreviewUpdate()
+    {
+        ballPreviewObject.transform.position = fpCamera.transform.position + fpCamera.transform.forward * 1f;
         ballPreviewObject.transform.rotation = Quaternion.LookRotation(fpCamera.transform.forward);
     }
-    
-    void PlaceUpdate()
+
+    private void PlaceBallInput()
     {
         if (pc.attackInput)
         {
-            ballPlacement.PlaceBall();
             pc.attackInput = false;
+            ballPlacement.PlaceBall();
             ChangeState(PlayerStates.BaseMovement);
         }
     }

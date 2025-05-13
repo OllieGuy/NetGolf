@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerBaseMovement : PlayerState
+public class PlayerBaseMovement : PlayerBaseState
 {
     [Header("Movement Parameters")]
     [SerializeField] private float speed;
@@ -31,26 +31,19 @@ public class PlayerBaseMovement : PlayerState
     private float camNormalFOV;
     float camTargetFOV { get { return isSprinting ? camNormalFOV + camSprintFOVIncrease : camNormalFOV; } }
 
-    void Start()
-    {
-        camNormalFOV = fpCamera.Lens.FieldOfView;
-    }
-
     public override void StartState()
-    {
-
+    { 
+        camNormalFOV = fpCamera.Lens.FieldOfView;
     }
     public override void UpdateState()
     {
         MoveUpdate();
         JumpUpdate();
-        LookUpdate();
+        LookUpdate(); 
+        InputUpdate();
         CameraUpdate();
     }
-    public override void ExitState()
-    {
-
-    }
+    public override void ExitState() { }
 
     protected void MoveUpdate()
     {
@@ -92,6 +85,16 @@ public class PlayerBaseMovement : PlayerState
         currentPitch = Mathf.Clamp(currentPitch - input.y, -pitchLimit, pitchLimit);
         fpCamera.transform.localRotation = Quaternion.Euler(currentPitch, 0, 0);
         transform.Rotate(Vector3.up * input.x);
+    }
+    
+    protected void InputUpdate()
+    {
+        if (pc.interactInput)
+        {
+            Debug.Log("int");
+            ChangeState(PlayerStates.PlaceBall);
+            pc.interactInput = false;
+        }
     }
 
     protected void CameraUpdate()
