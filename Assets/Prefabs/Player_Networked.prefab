@@ -89,11 +89,14 @@ GameObject:
   - component: {fileID: 1866329718053232366}
   - component: {fileID: 9031270778670868619}
   - component: {fileID: 4901645066447926391}
-  - component: {fileID: 1805727302714115696}
   - component: {fileID: 5957551148458008602}
   - component: {fileID: -6829526571379728520}
   - component: {fileID: 6623126776312649253}
   - component: {fileID: -1000832040465723046}
+  - component: {fileID: -1837769022685705422}
+  - component: {fileID: 1805727302714115696}
+  - component: {fileID: -1360178214837532112}
+  - component: {fileID: 6834898187706693803}
   m_Layer: 0
   m_Name: Player_Networked
   m_TagString: Untagged
@@ -248,31 +251,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1805727302714115696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7579724782061891667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eade666f7090e474bab2d15d85f4bdab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fpCamera: {fileID: 4181029037945261752}
-  charController: {fileID: 4901645066447926391}
-  pc: {fileID: 5957551148458008602}
-  speed: 3.5
-  sprintSpeed: 6
-  acceleration: 15
-  jumpHeight: 2
-  gravity: -9.81
-  characterWeight: 2
-  lookSensitivity: 0.05
-  pitchLimit: 85
-  camSprintFOVIncrease: 10
-  sprintFOVSmooth: 20
 --- !u!114 &5957551148458008602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +267,7 @@ MonoBehaviour:
   lookInput: {x: 0, y: 0}
   sprintInput: 0
   jumpInput: 0
+  attackInput: 0
 --- !u!114 &-6829526571379728520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,3 +352,72 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-1837769022685705422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b367240854375145ad9942874414cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1805727302714115696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade666f7090e474bab2d15d85f4bdab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3.5
+  sprintSpeed: 6
+  acceleration: 15
+  jumpHeight: 2
+  lookSensitivity: 0.05
+  pitchLimit: 85
+  gravity: -9.81
+  characterWeight: 2
+  camSprintFOVIncrease: 10
+  sprintFOVSmooth: 20
+--- !u!114 &-1360178214837532112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf09043d8efc35468207d071312b6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1.75
+  sprintSpeed: 3
+  acceleration: 15
+  jumpHeight: 1
+  lookSensitivity: 0.05
+  pitchLimit: 85
+  gravity: -9.81
+  characterWeight: 2
+  camSprintFOVIncrease: 5
+  sprintFOVSmooth: 20
+  ballPreviewObject: {fileID: 6864546094918944333, guid: 69c206f235296ef47a56131d5a029c20, type: 3}
+--- !u!114 &6834898187706693803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec106a2f0916494db056b6760a75176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

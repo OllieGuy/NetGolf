@@ -4,13 +4,8 @@ using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerBaseMovement : PlayerState
 {
-    [Header("Components")]
-    [SerializeField] private CinemachineCamera fpCamera;
-    [SerializeField] private CharacterController charController;
-    [SerializeField] private PlayerController pc;
-
     [Header("Movement Parameters")]
     [SerializeField] private float speed;
     [SerializeField] private float sprintSpeed;
@@ -18,17 +13,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpHeight;
     float currentSpeed => pc.sprintInput ? sprintSpeed : speed;
     bool isSprinting { get { return pc.sprintInput && charController.velocity.sqrMagnitude > 0.1f; } }
-    
+
+    [Header("Look Parameters")]
+    [SerializeField] protected float lookSensitivity;
+    [SerializeField] protected float pitchLimit;
+    protected float currentPitch;
+
     [Header("Physics Parameters")]
     [SerializeField] private float gravity;
     [SerializeField] private float characterWeight;
     private float verticalVelocity;
     private Vector3 currentVelocity;
-    
-    [Header("Look Parameters")]
-    [SerializeField] private float lookSensitivity;
-    [SerializeField] private float pitchLimit;
-    float currentPitch;
 
     [Header("Camera Parameters")]
     [SerializeField] private float camSprintFOVIncrease;
@@ -38,23 +33,26 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        //if (pc == null) pc = GetComponent<PlayerController>();
-        //if (charController == null) charController = GetComponent<CharacterController>();
-        //if (fpCamera == null) fpCamera = GetComponentInChildren<CinemachineCamera>();
         camNormalFOV = fpCamera.Lens.FieldOfView;
-
-        //Cursor.visible = false;
     }
 
-    void Update()
+    public override void StartState()
+    {
+
+    }
+    public override void UpdateState()
     {
         MoveUpdate();
         JumpUpdate();
         LookUpdate();
         CameraUpdate();
     }
+    public override void ExitState()
+    {
 
-    void MoveUpdate()
+    }
+
+    protected void MoveUpdate()
     {
         Vector3 move = fpCamera.transform.forward * pc.moveInput.y + fpCamera.transform.right * pc.moveInput.x;
         move.y = 0;
@@ -79,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         charController.Move(velocity * Time.deltaTime);
     }
 
-    public void JumpUpdate()
+    protected void JumpUpdate()
     {
         if (charController.isGrounded && pc.jumpInput)
         {
@@ -88,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void LookUpdate()
+    protected void LookUpdate()
     {
         Vector2 input = new Vector2(pc.lookInput.x * lookSensitivity, pc.lookInput.y * lookSensitivity);
         currentPitch = Mathf.Clamp(currentPitch - input.y, -pitchLimit, pitchLimit);
@@ -96,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(Vector3.up * input.x);
     }
 
-    void CameraUpdate()
+    protected void CameraUpdate()
     {
         fpCamera.Lens.FieldOfView = Mathf.Lerp(fpCamera.Lens.FieldOfView, camTargetFOV, sprintFOVSmooth * Time.deltaTime);
     }

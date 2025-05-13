@@ -3,15 +3,15 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
-[RequireComponent(typeof(PlayerMovement))]
 public class PlayerController : MonoBehaviour
 {
     public Vector2 moveInput;
     public Vector2 lookInput;
     public bool sprintInput;
     public bool jumpInput;
+    public bool interactInput;
+    public bool attackInput;
 
-#if ENABLE_INPUT_SYSTEM
     void OnMove(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
@@ -31,7 +31,16 @@ public class PlayerController : MonoBehaviour
     {
         JumpInput(value.isPressed);
     }
-#endif
+    
+    void OnInteract(InputValue value)
+    {
+        InteractInput(value.isPressed);
+    }
+    
+    void OnAttack(InputValue value)
+    {
+        AttackInput(value.isPressed);
+    }
 
     public void MoveInput(Vector2 moveDirection)
     {
@@ -51,6 +60,16 @@ public class PlayerController : MonoBehaviour
     public void JumpInput(bool jumpState)
     {
         jumpInput = jumpState;
+    }
+    
+    public void InteractInput(bool interactState)
+    {
+        interactInput = interactState;
+    }
+
+    public void AttackInput(bool attackState)
+    {
+        attackInput = attackState;
     }
 
     private void OnApplicationFocus(bool focus)

@@ -7,19 +7,19 @@ public class ClientPlayerInputs : NetworkBehaviour
 {
     private PlayerInput inputs;
     private PlayerController playerController;
-    private PlayerMovement playerMovement;
+    private PlayerState playerState;
     private CinemachineCamera playerCamera;
 
     void Awake()
     {
         inputs = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
-        playerMovement = GetComponent<PlayerMovement>();
+        playerState = GetComponent<PlayerState>();
         playerCamera = GetComponentInChildren<CinemachineCamera>();
 
         inputs.enabled = false;
         playerController.enabled = false;
-        playerMovement.enabled = false;
+        playerState.enabled = false;
         playerCamera.enabled = false;
     }
 
@@ -32,12 +32,7 @@ public class ClientPlayerInputs : NetworkBehaviour
             inputs.enabled = true;
             playerController.enabled = true;
             playerCamera.enabled = true;
-            playerMovement.enabled = true;
-        }
-        
-        if (IsServer)
-        {
-            //playerMovement.enabled = true;
+            playerState.enabled = true;
         }
     }
 
