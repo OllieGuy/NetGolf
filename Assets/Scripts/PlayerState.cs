@@ -14,6 +14,9 @@ public class PlayerState : MonoBehaviour
     [SerializeField] CharacterController charController;
     [SerializeField] PlayerController pc;
 
+    public float cameraPitch;
+    public float camNormalFOV;
+
     private PlayerBaseState currentState;
     private Dictionary<PlayerStates, PlayerBaseState> stateRefs;
 
@@ -54,15 +57,27 @@ public abstract class PlayerBaseState : MonoBehaviour
     protected PlayerController pc;
     protected GameObject playerObject;
     protected PlayerState stateMachine;
-    protected float currentPitch;
+    protected float currentPitch
+    {
+        get => stateMachine.cameraPitch;
+        set => stateMachine.cameraPitch = value;
+    }
+
+    protected float camNormalFOV
+    {
+        get => stateMachine.camNormalFOV;
+        set => stateMachine.camNormalFOV = value;
+    }
 
     public void SetValues(CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
     {
+        stateMachine = _stateMachine;
+
         fpCamera = cam;
+        camNormalFOV = fpCamera.Lens.FieldOfView;
         charController = controller;
         pc = input;
         playerObject = obj;
-        stateMachine = _stateMachine;
     }
 
     public abstract void StartState();

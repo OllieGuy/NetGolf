@@ -27,13 +27,9 @@ public class PlayerBaseMovement : PlayerBaseState
     [Header("Camera Parameters")]
     [SerializeField] private float camSprintFOVIncrease;
     [SerializeField] private float sprintFOVSmooth;
-    private float camNormalFOV;
     float camTargetFOV { get { return isSprinting ? camNormalFOV + camSprintFOVIncrease : camNormalFOV; } }
 
-    public override void StartState()
-    { 
-        camNormalFOV = fpCamera.Lens.FieldOfView;
-    }
+    public override void StartState() { }
     public override void UpdateState()
     {
         MoveUpdate();
