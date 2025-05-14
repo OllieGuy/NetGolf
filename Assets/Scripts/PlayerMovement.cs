@@ -102,10 +102,14 @@ public class PlayerBaseMovement : PlayerBaseState
 
             if (hasHit && hit.collider.CompareTag("Ball"))
             {
-                PlayerBaseState state = GetState(PlayerStates.AimBall);
-                PlayerAimBall aimState = (PlayerAimBall)state;
-                aimState.SetBall(hit.collider.gameObject);
-                ChangeState(PlayerStates.AimBall);
+                BallNetworked networkBall = hit.collider.GetComponent<BallNetworked>();
+                if (networkBall != null && networkBall.IsOwner)
+                {
+                    PlayerBaseState state = GetState(PlayerStates.AimBall);
+                    PlayerAimBall aimState = (PlayerAimBall)state;
+                    aimState.SetBall(hit.collider.gameObject);
+                    ChangeState(PlayerStates.AimBall);
+                }
             }
         }
         else if (pc.attack2Input)

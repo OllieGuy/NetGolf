@@ -55,7 +55,6 @@ public class BallAimPreview : MonoBehaviour
         dynamicGradient.SetKeys(colorKeys, alphaKeys);
         lineRenderer.colorGradient = dynamicGradient;
 
-        // Update line positions
         for (int i = 0; i < resolution; i++)
         {
             float t = i / (float)(resolution - 1);

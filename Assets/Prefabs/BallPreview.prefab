@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3398a4ca60a58bc43bd59a15a3033a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   placeableMaterial: {fileID: 2100000, guid: a45eda55ed206084ba77f3cbb44dd93b, type: 2}
   unplaceableMaterial: {fileID: 2100000, guid: 358b9af951ab79f40962e680929eb38d, type: 2}
   ball: {fileID: 6864546094918944333, guid: b1bcd83874a6c3244bf934f5e9aae1ea, type: 3}

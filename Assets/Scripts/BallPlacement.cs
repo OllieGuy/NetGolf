@@ -1,19 +1,23 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class BallPlacement : MonoBehaviour
 {
     [SerializeField] Material placeableMaterial;
     [SerializeField] Material unplaceableMaterial;
-    [SerializeField] GameObject ball;
     [SerializeField] MeshRenderer ballRenderer;
 
     bool isPlaceable = false;
 
     public void PlaceBall()
     {
-        if (isPlaceable)
+        if (isPlaceable && NetworkManager.Singleton.IsServer)
         {
-            Instantiate(ball, transform.position, Quaternion.identity);
+            BallManager.AddBall(transform.position, transform.rotation);
+        }
+        else if (isPlaceable && NetworkManager.Singleton.IsClient)
+        {
+            BallManager.AddBallFromClient(transform.position, transform.rotation);
         }
     }
 

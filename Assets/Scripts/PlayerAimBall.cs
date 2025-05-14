@@ -99,8 +99,13 @@ public class PlayerAimBall : PlayerBaseState
 
     private void HitBall()
     {
-        ballRb.isKinematic = false;
-        ballRb.AddForce(new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z) * aimPower, ForceMode.Impulse);
-        ballAp.gameObject.SetActive(false);
+        var direction = new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z);
+
+        var networkBall = currentBall.GetComponent<BallNetworked>();
+        if (networkBall != null && networkBall.IsOwner)
+        {
+            networkBall.HitBallServerRpc(direction, aimPower);
+            ballAp.gameObject.SetActive(false);
+        }
     }
 }
