@@ -14,10 +14,6 @@ public class PlayerBaseMovement : PlayerBaseState
     float currentSpeed => pc.sprintInput ? sprintSpeed : speed;
     bool isSprinting { get { return pc.sprintInput && charController.velocity.sqrMagnitude > 0.1f; } }
 
-    [Header("Look Parameters")]
-    [SerializeField] protected float lookSensitivity;
-    [SerializeField] protected float pitchLimit;
-
     [Header("Physics Parameters")]
     [SerializeField] private float gravity;
     [SerializeField] private float characterWeight;
@@ -85,9 +81,38 @@ public class PlayerBaseMovement : PlayerBaseState
     {
         if (pc.interactInput)
         {
-            ChangeState(PlayerStates.PlaceBall);
-            pc.interactInput = false;
+            RaycastHit hit;
+
+            Vector3 origin = fpCamera.transform.position;
+            Vector3 direction = fpCamera.transform.forward;
+            Vector3 halfExtents = new Vector3(1f, 1f, 1f);
+            float maxDistance = 5f;
+
+            int ballLayerMask = 1 << LayerMask.NameToLayer("Ball");
+
+            bool hasHit = Physics.BoxCast(
+                origin,
+                halfExtents,
+                direction,
+                out hit,
+                fpCamera.transform.rotation,
+                maxDistance,
+                ballLayerMask
+            );
+
+            if (hasHit && hit.collider.CompareTag("Ball"))
+            {
+                PlayerBaseState state = GetState(PlayerStates.AimBall);
+                PlayerAimBall aimState = (PlayerAimBall)state;
+                aimState.SetBall(hit.collider.gameObject);
+                ChangeState(PlayerStates.AimBall);
+            }
         }
+        else if (pc.attack2Input)
+        {
+            ChangeState(PlayerStates.PlaceBall);
+        }
+        
     }
 
     protected void CameraUpdate()

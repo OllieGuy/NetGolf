@@ -14,8 +14,11 @@ public class PlayerState : MonoBehaviour
     [SerializeField] CharacterController charController;
     [SerializeField] PlayerController pc;
 
-    public float cameraPitch;
-    public float camNormalFOV;
+    [Header("Camera Parameters")]
+    [System.NonSerialized] public float cameraPitch;
+    [System.NonSerialized] public float camNormalFOV;
+    public float lookSensitivity;
+    public float pitchLimit;
 
     private PlayerBaseState currentState;
     private Dictionary<PlayerStates, PlayerBaseState> stateRefs;
@@ -48,6 +51,11 @@ public class PlayerState : MonoBehaviour
         currentState = stateRefs[newState];
         currentState.StartState();
     }
+    
+    public PlayerBaseState GetState(PlayerStates newState)
+    {
+        return stateRefs[newState];
+    }
 }
 
 public abstract class PlayerBaseState : MonoBehaviour
@@ -69,6 +77,16 @@ public abstract class PlayerBaseState : MonoBehaviour
         set => stateMachine.camNormalFOV = value;
     }
 
+    protected float lookSensitivity
+    {
+        get => stateMachine.lookSensitivity;
+    }
+    
+    protected float pitchLimit
+    {
+        get => stateMachine.pitchLimit;
+    }
+
     public void SetValues(CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
     {
         stateMachine = _stateMachine;
@@ -84,6 +102,7 @@ public abstract class PlayerBaseState : MonoBehaviour
     public abstract void UpdateState();
     public abstract void ExitState();
     protected void ChangeState(PlayerStates newState) => stateMachine.ChangeState(newState);
+    protected PlayerBaseState GetState(PlayerStates newState) => stateMachine.GetState(newState);
 }
 
 public enum PlayerStates

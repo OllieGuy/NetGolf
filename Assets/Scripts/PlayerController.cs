@@ -6,15 +6,23 @@ using static UnityEngine.Rendering.DebugUI;
 public class PlayerController : MonoBehaviour
 {
     public Vector2 moveInput;
+    public float rotateInput;
     public Vector2 lookInput;
     public bool sprintInput;
     public bool jumpInput;
+    public bool crouchInput;
     public bool interactInput;
     public bool attackInput;
+    public bool attack2Input;
 
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
+    }
+    
+    void OnRotate(InputValue value)
+    {
+        rotateInput = value.Get<float>();
     }
 
     void OnLook(InputValue value)
@@ -32,6 +40,11 @@ public class PlayerController : MonoBehaviour
         jumpInput = value.isPressed;
     }
     
+    void OnCrouch(InputValue value)
+    {
+        crouchInput = value.isPressed;
+    }
+    
     void OnInteract(InputValue value)
     {
         interactInput = value.isPressed;
@@ -40,6 +53,11 @@ public class PlayerController : MonoBehaviour
     void OnAttack(InputValue value)
     {
         attackInput = value.isPressed;
+    }
+    
+    void OnAttack2(InputValue value)
+    {
+        attack2Input = value.isPressed;
     }
 
     private void OnApplicationFocus(bool focus)

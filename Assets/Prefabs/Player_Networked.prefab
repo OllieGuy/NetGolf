@@ -264,11 +264,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveInput: {x: 0, y: 0}
+  rotateInput: 0
   lookInput: {x: 0, y: 0}
   sprintInput: 0
   jumpInput: 0
+  crouchInput: 0
   interactInput: 0
   attackInput: 0
+  attack2Input: 0
 --- !u!114 &-6829526571379728520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +374,8 @@ MonoBehaviour:
   fpCamera: {fileID: 4181029037945261752}
   charController: {fileID: 4901645066447926391}
   pc: {fileID: 5957551148458008602}
+  lookSensitivity: 0.1
+  pitchLimit: 85
 --- !u!114 &1805727302714115696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,8 +392,6 @@ MonoBehaviour:
   sprintSpeed: 6
   acceleration: 15
   jumpHeight: 2
-  lookSensitivity: 0.05
-  pitchLimit: 85
   gravity: -9.81
   characterWeight: 2
   camSprintFOVIncrease: 10
@@ -409,8 +412,6 @@ MonoBehaviour:
   sprintSpeed: 3
   acceleration: 15
   jumpHeight: 1
-  lookSensitivity: 0.05
-  pitchLimit: 85
   gravity: -9.81
   characterWeight: 2
   camSprintFOVIncrease: 5
@@ -428,3 +429,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ec106a2f0916494db056b6760a75176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  horizontalAimSensitivity: 20
+  verticalAimSensitivity: 2
+  powerAimSensitivity: 5
+  maxPower: 30
+  defaultAimPower: 5
+  defaultYAim: 1
