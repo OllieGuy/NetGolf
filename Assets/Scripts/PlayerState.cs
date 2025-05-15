@@ -10,6 +10,7 @@ public class PlayerState : MonoBehaviour
     [SerializeField] PlayerAimBall playerAimBall;
 
     [Header("Components")]
+    [SerializeField] Animator playerAnimator;
     [SerializeField] CinemachineCamera fpCamera;
     [SerializeField] CharacterController charController;
     [SerializeField] PlayerController pc;
@@ -43,6 +44,7 @@ public class PlayerState : MonoBehaviour
     void Update()
     {
         currentState?.UpdateState();
+        playerAnimator.SetFloat("PlayerSpeed", currentState.currentVelocity.magnitude);
     }
 
     public void ChangeState(PlayerStates newState)
@@ -60,6 +62,7 @@ public class PlayerState : MonoBehaviour
 
 public abstract class PlayerBaseState : MonoBehaviour
 {
+    protected Animator playerAnimator;
     protected CinemachineCamera fpCamera;
     protected CharacterController charController;
     protected PlayerController pc;
@@ -86,6 +89,8 @@ public abstract class PlayerBaseState : MonoBehaviour
     {
         get => stateMachine.pitchLimit;
     }
+
+    public Vector3 currentVelocity;
 
     public void SetValues(CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
     {

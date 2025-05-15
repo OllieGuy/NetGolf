@@ -18,7 +18,6 @@ public class PlayerBaseMovement : PlayerBaseState
     [SerializeField] private float gravity;
     [SerializeField] private float characterWeight;
     private float verticalVelocity;
-    private Vector3 currentVelocity;
 
     [Header("Camera Parameters")]
     [SerializeField] private float camSprintFOVIncrease;
