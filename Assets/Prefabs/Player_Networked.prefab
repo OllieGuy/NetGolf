@@ -1266,6 +1266,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList: []
   m_Animator: {fileID: 4377814992173593841}
+  playerAnimator: {fileID: 4377814992173593841}
+  NetSpeed:
+    m_InternalValue: 0
 --- !u!1 &7790584724361360062
 GameObject:
   m_ObjectHideFlags: 0
