@@ -65,6 +65,7 @@ public class PlayerBaseMovement : PlayerBaseState
         if (charController.isGrounded && pc.jumpInput)
         {
             verticalVelocity = Mathf.Sqrt(Mathf.Abs(jumpHeight * gravity * characterWeight));
+            playerAnimator.SetTrigger("Jump");
         }
     }
 

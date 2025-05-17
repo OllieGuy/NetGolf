@@ -35,7 +35,7 @@ public class PlayerState : MonoBehaviour
 
         foreach (PlayerBaseState state in stateRefs.Values)
         {
-            state.SetValues(fpCamera, charController, pc, gameObject, this);
+            state.SetValues(playerAnimator, fpCamera, charController, pc, gameObject, this);
         }
 
         ChangeState(PlayerStates.BaseMovement);
@@ -45,6 +45,7 @@ public class PlayerState : MonoBehaviour
     {
         currentState?.UpdateState();
         playerAnimator.SetFloat("PlayerSpeed", currentState.currentVelocity.magnitude);
+        playerAnimator.SetBool("Grounded", charController.isGrounded);
     }
 
     public void ChangeState(PlayerStates newState)
@@ -92,10 +93,11 @@ public abstract class PlayerBaseState : MonoBehaviour
 
     public Vector3 currentVelocity;
 
-    public void SetValues(CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
+    public void SetValues(Animator anim, CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
     {
         stateMachine = _stateMachine;
 
+        playerAnimator = anim;
         fpCamera = cam;
         camNormalFOV = fpCamera.Lens.FieldOfView;
         charController = controller;
