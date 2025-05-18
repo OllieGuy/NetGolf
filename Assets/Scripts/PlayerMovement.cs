@@ -88,7 +88,7 @@ public class PlayerBaseMovement : PlayerBaseState
             Vector3 halfExtents = new Vector3(1f, 1f, 1f);
             float maxDistance = 5f;
 
-            int ballLayerMask = 1 << LayerMask.NameToLayer("Ball");
+            int interactableLayerMask = LayerMask.GetMask("Ball", "Pick Up");
 
             bool hasHit = Physics.BoxCast(
                 origin,
@@ -97,7 +97,7 @@ public class PlayerBaseMovement : PlayerBaseState
                 out hit,
                 fpCamera.transform.rotation,
                 maxDistance,
-                ballLayerMask
+                interactableLayerMask
             );
 
             if (hasHit && hit.collider.CompareTag("Ball"))
@@ -111,10 +111,22 @@ public class PlayerBaseMovement : PlayerBaseState
                     ChangeState(PlayerStates.AimBall);
                 }
             }
+            else if (hasHit && hit.collider.CompareTag("Scorecard"))
+            {
+                Scorecard card = hit.collider.GetComponent<Scorecard>();
+                inventory.AddScorecard(card);
+                ChangeState(PlayerStates.Scorecard);
+            }
         }
         else if (pc.attack2Input)
         {
             ChangeState(PlayerStates.PlaceBall);
+        }
+        
+        if (pc.scorecardInput && inventory.scorecard != null)
+        {
+            pc.scorecardInput = false;
+            ChangeState(PlayerStates.Scorecard);
         }
         
     }

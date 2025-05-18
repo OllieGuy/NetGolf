@@ -39,7 +39,6 @@ public class PlayerAimBall : PlayerBaseState
     {
         if (currentBall == null || ballRb == null)
         {
-            Debug.LogError("No ball");
             ChangeState(PlayerStates.BaseMovement);
             return;
         }

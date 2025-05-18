@@ -1281,6 +1281,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986653731}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1115987599
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.744792
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854968928074632376, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233498149068353406, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
+      propertyPath: m_Name
+      value: Scorecard
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a40256be2d6cca4459a5fa523effcea2, type: 3}
 --- !u!1 &1232670027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,7 +1566,7 @@ GameObject:
   - component: {fileID: 1432653645}
   - component: {fileID: 1432653647}
   m_Layer: 0
-  m_Name: BallManager
+  m_Name: Network Object Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1984,3 +2041,4 @@ SceneRoots:
   - {fileID: 1566052074}
   - {fileID: 355961553}
   - {fileID: 1432653646}
+  - {fileID: 1115987599}

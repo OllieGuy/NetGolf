@@ -604,6 +604,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6487495268404132318}
+  - {fileID: 6135142254867390450}
   m_Father: {fileID: 8281134173393180796}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &7464123704182195830
@@ -865,6 +866,37 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!1 &1591971630376176233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3105700706787398650}
+  m_Layer: 0
+  m_Name: Scorecard Display Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3105700706787398650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591971630376176233}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: -0.06121, y: -0.217, z: 0.723}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9219849285283662919}
+  m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
 --- !u!1 &2060736955757883906
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,7 +991,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3105700706787398650}
   m_Father: {fileID: 4644947024337989437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4181029037945261752
@@ -2205,6 +2238,7 @@ GameObject:
   - component: {fileID: 1805727302714115696}
   - component: {fileID: -1360178214837532112}
   - component: {fileID: 6834898187706693803}
+  - component: {fileID: -6679543926181287255}
   - component: {fileID: 7717638504000468512}
   - component: {fileID: -354522745006724970}
   - component: {fileID: 4147812948828278046}
@@ -2331,6 +2365,7 @@ MonoBehaviour:
   interactInput: 0
   attackInput: 0
   attack2Input: 0
+  scorecardInput: 0
 --- !u!114 &-6829526571379728520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2432,6 +2467,7 @@ MonoBehaviour:
   playerPlaceBall: {fileID: -1360178214837532112}
   playerAimBall: {fileID: 6834898187706693803}
   playerRagdoll: {fileID: 7717638504000468512}
+  playerScorecard: {fileID: -6679543926181287255}
   playerAnimator: {fileID: 4377814992173593841}
   playerMesh: {fileID: 6809610661347851895}
   fpCamera: {fileID: 4181029037945261752}
@@ -2501,6 +2537,29 @@ MonoBehaviour:
   maxPower: 30
   defaultAimPower: 5
   defaultYAim: 1
+--- !u!114 &-6679543926181287255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e63a70620daca44ba22ae5fea52f0d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentVelocity: {x: 0, y: 0, z: 0}
+  speed: 1.75
+  sprintSpeed: 3
+  acceleration: 15
+  jumpHeight: 1
+  gravity: -9.81
+  characterWeight: 2
+  camSprintFOVIncrease: 5
+  sprintFOVSmooth: 20
+  scorecardDisplayPosition: {fileID: 3105700706787398650}
+  scorecardStoredPosition: {fileID: 6135142254867390450}
 --- !u!114 &7717638504000468512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2682,6 +2741,37 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!1 &8038374532865983416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6135142254867390450}
+  m_Layer: 0
+  m_Name: Scorecard Stored Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6135142254867390450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8038374532865983416}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.010982916, y: -0.7731475, z: 0.09234094, w: 0.6273718}
+  m_LocalPosition: {x: 0.151, y: 0.178, z: 0.015}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1923878165441536256}
+  m_LocalEulerAnglesHint: {x: 7.412, y: -101.385, z: 7.699}
 --- !u!1 &8247007533128928661
 GameObject:
   m_ObjectHideFlags: 0

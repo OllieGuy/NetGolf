@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public bool interactInput;
     public bool attackInput;
     public bool attack2Input;
+    public bool scorecardInput;
 
     void OnMove(InputValue value)
     {
@@ -58,6 +59,11 @@ public class PlayerController : MonoBehaviour
     void OnAttack2(InputValue value)
     {
         attack2Input = value.isPressed;
+    }
+    
+    void OnScorecard(InputValue value)
+    {
+        scorecardInput = value.isPressed;
     }
 
     private void OnApplicationFocus(bool focus)

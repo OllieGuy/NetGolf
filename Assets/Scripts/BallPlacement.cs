@@ -13,11 +13,11 @@ public class BallPlacement : MonoBehaviour
     {
         if (isPlaceable && NetworkManager.Singleton.IsServer)
         {
-            BallManager.AddBall(transform.position, transform.rotation);
+            NetworkObjectManager.AddBall(transform.position, transform.rotation);
         }
         else if (isPlaceable && NetworkManager.Singleton.IsClient)
         {
-            BallManager.AddBallFromClient(transform.position, transform.rotation);
+            NetworkObjectManager.AddBallFromClient(transform.position, transform.rotation);
         }
     }
 

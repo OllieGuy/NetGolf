@@ -1,11 +1,11 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class BallManager : NetworkBehaviour
+public class NetworkObjectManager : NetworkBehaviour
 {
     [SerializeField] GameObject ballPrefab;
 
-    static BallManager instance = null;
+    static NetworkObjectManager instance = null;
 
     void Awake()
     {
@@ -29,4 +29,18 @@ public class BallManager : NetworkBehaviour
     {
         AddBall(pos, rot, rpcParams);
     }
+
+
+    //Scorecard stuff
+    //[ServerRpc(RequireOwnership = false)]
+    //public void SendScorecardServerRpc(byte[] drawingData, ServerRpcParams rpcParams = default)
+    //{
+    //    UpdateScorecardClientRpc(drawingData);
+    //}
+
+    //[ClientRpc]
+    //public void UpdateScorecardClientRpc(byte[] drawingData)
+    //{
+    //    LoadDrawingFromBytes(drawingData);
+    //}
 }

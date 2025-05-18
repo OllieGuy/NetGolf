@@ -11,6 +11,7 @@ public class PlayerState : NetworkBehaviour
     [SerializeField] PlayerPlaceBall playerPlaceBall;
     [SerializeField] PlayerAimBall playerAimBall;
     [SerializeField] PlayerRagdoll playerRagdoll;
+    [SerializeField] PlayerScorecard playerScorecard;
 
     [Header("Components")]
     [SerializeField] Animator playerAnimator;
@@ -28,6 +29,8 @@ public class PlayerState : NetworkBehaviour
     private PlayerBaseState currentState;
     private Dictionary<PlayerStates, PlayerBaseState> stateRefs;
 
+    public PlayerInventory playerInventory = new();
+
     void Awake()
     {
         stateRefs = new Dictionary<PlayerStates, PlayerBaseState>
@@ -35,7 +38,8 @@ public class PlayerState : NetworkBehaviour
             { PlayerStates.BaseMovement, playerBaseMovement },
             { PlayerStates.PlaceBall, playerPlaceBall },
             { PlayerStates.AimBall, playerAimBall },
-            { PlayerStates.Ragdoll, playerRagdoll }
+            { PlayerStates.Ragdoll, playerRagdoll },
+            { PlayerStates.Scorecard, playerScorecard }
         };
 
         foreach (PlayerBaseState state in stateRefs.Values)
@@ -110,6 +114,10 @@ public abstract class PlayerBaseState : MonoBehaviour
     {
         get => stateMachine.pitchLimit;
     }
+    protected PlayerInventory inventory
+    {
+        get => stateMachine.playerInventory;
+    }
 
     public Vector3 currentVelocity;
 
@@ -133,10 +141,37 @@ public abstract class PlayerBaseState : MonoBehaviour
     protected PlayerBaseState GetState(PlayerStates newState) => stateMachine.GetState(newState);
 }
 
+public class PlayerInventory
+{
+    public Scorecard scorecard;
+    public GameObject map;
+
+    public PlayerInventory()
+    {
+        scorecard = null;
+        map = null;
+    }
+
+    public void AddScorecard(Scorecard _scorecard)
+    {
+        scorecard = _scorecard;
+    }
+    
+    public void DropScorecard()
+    {
+        if (scorecard == null)
+            return;
+
+        scorecard = null;
+        
+    }
+}
+
 public enum PlayerStates
 {
     BaseMovement,
     PlaceBall,
     AimBall,
-    Ragdoll
+    Ragdoll,
+    Scorecard
 }
