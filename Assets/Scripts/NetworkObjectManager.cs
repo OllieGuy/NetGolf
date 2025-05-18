@@ -6,6 +6,8 @@ public class NetworkObjectManager : NetworkBehaviour
     [SerializeField] GameObject ballPrefab;
 
     static NetworkObjectManager instance = null;
+    
+    public static NetworkObjectManager Instance { get { return instance; } }
 
     void Awake()
     {
