@@ -27,7 +27,7 @@ public class PlayerBaseMovement : PlayerBaseState
     public override void StartState() { }
     public override void UpdateState()
     {
-        MoveUpdate();
+        if (charController.enabled) MoveUpdate();
         JumpUpdate();
         LookUpdate(); 
         InputUpdate();

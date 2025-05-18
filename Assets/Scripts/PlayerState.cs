@@ -1,16 +1,20 @@
 using System.Collections.Generic;
+using System.Globalization;
 using Unity.Cinemachine;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerState : MonoBehaviour
+public class PlayerState : NetworkBehaviour
 {
     [Header("State References")]
     [SerializeField] PlayerBaseMovement playerBaseMovement;
     [SerializeField] PlayerPlaceBall playerPlaceBall;
     [SerializeField] PlayerAimBall playerAimBall;
+    [SerializeField] PlayerRagdoll playerRagdoll;
 
     [Header("Components")]
     [SerializeField] Animator playerAnimator;
+    [SerializeField] SkinnedMeshRenderer playerMesh;
     [SerializeField] CinemachineCamera fpCamera;
     [SerializeField] CharacterController charController;
     [SerializeField] PlayerController pc;
@@ -30,12 +34,13 @@ public class PlayerState : MonoBehaviour
         {
             { PlayerStates.BaseMovement, playerBaseMovement },
             { PlayerStates.PlaceBall, playerPlaceBall },
-            { PlayerStates.AimBall, playerAimBall }
+            { PlayerStates.AimBall, playerAimBall },
+            { PlayerStates.Ragdoll, playerRagdoll }
         };
 
         foreach (PlayerBaseState state in stateRefs.Values)
         {
-            state.SetValues(playerAnimator, fpCamera, charController, pc, gameObject, this);
+            state.SetValues(playerAnimator, playerMesh, fpCamera, charController, pc, gameObject, this);
         }
 
         ChangeState(PlayerStates.BaseMovement);
@@ -54,7 +59,21 @@ public class PlayerState : MonoBehaviour
         currentState = stateRefs[newState];
         currentState.StartState();
     }
-    
+
+    [Rpc(SendTo.Server)]
+    public void TriggerRagdollServerRpc(Vector3 force, Vector3 hitPoint)
+    {
+        TriggerRagdollClientRpc(force, hitPoint);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerRagdollClientRpc(Vector3 force, Vector3 hitPoint)
+    {
+        PlayerRagdoll ragdollState = (PlayerRagdoll)GetState(PlayerStates.Ragdoll);
+        ragdollState.SetHitValues(force, hitPoint);
+        ChangeState(PlayerStates.Ragdoll);
+    }
+
     public PlayerBaseState GetState(PlayerStates newState)
     {
         return stateRefs[newState];
@@ -64,6 +83,7 @@ public class PlayerState : MonoBehaviour
 public abstract class PlayerBaseState : MonoBehaviour
 {
     protected Animator playerAnimator;
+    protected SkinnedMeshRenderer playerMesh;
     protected CinemachineCamera fpCamera;
     protected CharacterController charController;
     protected PlayerController pc;
@@ -93,11 +113,12 @@ public abstract class PlayerBaseState : MonoBehaviour
 
     public Vector3 currentVelocity;
 
-    public void SetValues(Animator anim, CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
+    public void SetValues(Animator anim, SkinnedMeshRenderer mesh, CinemachineCamera cam, CharacterController controller, PlayerController input, GameObject obj, PlayerState _stateMachine)
     {
         stateMachine = _stateMachine;
 
         playerAnimator = anim;
+        playerMesh = mesh;
         fpCamera = cam;
         camNormalFOV = fpCamera.Lens.FieldOfView;
         charController = controller;
@@ -116,5 +137,6 @@ public enum PlayerStates
 {
     BaseMovement,
     PlaceBall,
-    AimBall
+    AimBall,
+    Ragdoll
 }

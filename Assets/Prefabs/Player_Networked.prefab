@@ -2205,7 +2205,9 @@ GameObject:
   - component: {fileID: 1805727302714115696}
   - component: {fileID: -1360178214837532112}
   - component: {fileID: 6834898187706693803}
+  - component: {fileID: 7717638504000468512}
   - component: {fileID: -354522745006724970}
+  - component: {fileID: 4147812948828278046}
   m_Layer: 9
   m_Name: Player_Networked
   m_TagString: Untagged
@@ -2226,9 +2228,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9219849285283662919}
   - {fileID: 950907547663327191}
   - {fileID: 8281134173393180796}
+  - {fileID: 9219849285283662919}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4377814992173593841
@@ -2425,10 +2427,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b367240854375145ad9942874414cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   playerBaseMovement: {fileID: 1805727302714115696}
   playerPlaceBall: {fileID: -1360178214837532112}
   playerAimBall: {fileID: 6834898187706693803}
+  playerRagdoll: {fileID: 7717638504000468512}
   playerAnimator: {fileID: 4377814992173593841}
+  playerMesh: {fileID: 6809610661347851895}
   fpCamera: {fileID: 4181029037945261752}
   charController: {fileID: 4901645066447926391}
   pc: {fileID: 5957551148458008602}
@@ -2496,6 +2501,23 @@ MonoBehaviour:
   maxPower: 30
   defaultAimPower: 5
   defaultYAim: 1
+--- !u!114 &7717638504000468512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7609c5079bad54749ae4fdc7db60e999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentVelocity: {x: 0, y: 0, z: 0}
+  ragdollController: {fileID: 4147812948828278046}
+  normalCamParent: {fileID: 4644947024337989437}
+  ragdollCamParent: {fileID: 7552747253693786731}
+  ragdollDuration: 2
 --- !u!114 &-354522745006724970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2515,6 +2537,20 @@ MonoBehaviour:
     m_InternalValue: 0
   NetGrounded:
     m_InternalValue: 0
+--- !u!114 &4147812948828278046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741cd9bd33080cc478c28bf5a33e131c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ragdollBodies: []
+  animator: {fileID: 4377814992173593841}
 --- !u!1 &7790192535314295688
 GameObject:
   m_ObjectHideFlags: 0

@@ -75,7 +75,11 @@ public class PlayerAimBall : PlayerBaseState
 
     private void AimUpdate()
     {
-        currentBall.transform.Rotate(Vector3.up * pc.moveInput.x * horizontalAimSensitivity * Time.deltaTime);
+        BallNetworked networkBall = currentBall.GetComponent<BallNetworked>();
+        if (networkBall != null && networkBall.IsOwner)
+        {
+            networkBall.RotateBallServerRpc(Vector3.up * pc.moveInput.x * horizontalAimSensitivity * Time.deltaTime);
+        }
         yAim += pc.moveInput.y * verticalAimSensitivity * Time.deltaTime;
 
         Vector3 aim = new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z);
@@ -99,9 +103,9 @@ public class PlayerAimBall : PlayerBaseState
 
     private void HitBall()
     {
-        var direction = new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z);
+        Vector3 direction = new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z);
 
-        var networkBall = currentBall.GetComponent<BallNetworked>();
+        BallNetworked networkBall = currentBall.GetComponent<BallNetworked>();
         if (networkBall != null && networkBall.IsOwner)
         {
             networkBall.HitBallServerRpc(direction, aimPower);
