@@ -10,6 +10,9 @@ public class Scorecard : MonoBehaviour
     private Texture2D drawingTexture;
     private Texture2D combinedTexture;
 
+    Vector2Int previousDrawLocation;
+    bool wasDrawring;
+
     public int Height { get { return baseTexture.height;} }
     public int Width { get { return baseTexture.width; } }
 

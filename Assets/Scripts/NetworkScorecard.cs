@@ -20,7 +20,8 @@ public class NetworkScorecard : NetworkBehaviour
             rb.isKinematic = false;
             attachedCard.transform.parent = transform;
             attachedCard.transform.localPosition = Vector3.zero;
-            transform.localRotation = attachedCard.transform.localRotation;
+            transform.rotation = attachedCard.transform.rotation;
+            attachedCard.transform.localRotation = Quaternion.identity;
         }
         else if (NetworkManager.Singleton.IsClient)
         {

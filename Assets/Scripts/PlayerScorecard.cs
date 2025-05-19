@@ -55,7 +55,7 @@ public class PlayerScorecard : PlayerBaseMovement
         if (pc.attack2Input)
         {
             pc.attack2Input = false;
-            scorecard.DropCard(transform.position);
+            scorecard.DropCard(scorecard.gameObject.transform.position);
             inventory.scorecard = null;
             ChangeState(PlayerStates.BaseMovement);
         }
