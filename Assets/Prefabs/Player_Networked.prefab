@@ -2242,6 +2242,7 @@ GameObject:
   - component: {fileID: 7717638504000468512}
   - component: {fileID: -354522745006724970}
   - component: {fileID: 4147812948828278046}
+  - component: {fileID: 1360115448895885685}
   m_Layer: 9
   m_Name: Player_Networked
   m_TagString: Untagged
@@ -2610,6 +2611,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ragdollBodies: []
   animator: {fileID: 4377814992173593841}
+--- !u!114 &1360115448895885685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579724782061891667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 853670fe8ab03b140a929aa250250cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerRenderer: {fileID: 6809610661347851895}
+  skins:
+  - {fileID: 2100000, guid: d07b665533b127b4e9d8347bd70be09b, type: 2}
+  - {fileID: 2100000, guid: e333f63f266056640936f7574b41de0b, type: 2}
+  - {fileID: 2100000, guid: 03f537a8ff7f83b4284bd8a8e0f16eef, type: 2}
+  - {fileID: 2100000, guid: 502d48dd5bccb514589d49739c5e5a8a, type: 2}
+  - {fileID: 2100000, guid: d317639788a54464cb59cdbfd4159fa8, type: 2}
+  - {fileID: 2100000, guid: 888fdc40dc4f31347af4d6ef7fd8fd75, type: 2}
+  - {fileID: 2100000, guid: faf8529b8dcb9f14ab3629a42485568b, type: 2}
+  accessoryColors:
+  - {fileID: 2100000, guid: 3de988cf3d62a4d4cb55d3760b680198, type: 2}
+  - {fileID: 2100000, guid: 3a49694afd1a9ba4980726e9a5364ab4, type: 2}
+  - {fileID: 2100000, guid: 23a8e51afce5baf4084d45567cdb5df0, type: 2}
+  - {fileID: 2100000, guid: 48d947999da0741488d62ca57e03fae4, type: 2}
+  - {fileID: 2100000, guid: 024d5dcdf196f2e4293d1d633b484e16, type: 2}
+  faceAccessories:
+  - gameObj: {fileID: 919132149155446097, guid: 8a790a6a88b28a04490f1d9045d210a1, type: 3}
+    texture: {fileID: 2100000, guid: 49894a70b5de0c54caccf8779d6eec4a, type: 2}
+    offset: {x: 0, y: -1.8, z: 0.125}
+  - gameObj: {fileID: 919132149155446097, guid: ccc3bfbb51bbecd42a16cf82ab82fc64, type: 3}
+    texture: {fileID: 2100000, guid: 59333d924ed8aba48aa651391bfa9b83, type: 2}
+    offset: {x: 0, y: -1.8, z: 0.125}
+  faceAccessoryTransform: {fileID: 7552747253693786731}
+  hairstyles:
+  - gameObj: {fileID: 919132149155446097, guid: dcf96cb9933f8fa48856bd5932b60f67, type: 3}
+    texture: {fileID: 0}
+    offset: {x: 0, y: -2.45, z: -0.05}
+  - gameObj: {fileID: 919132149155446097, guid: 0db30f70071d64f4ca8a0f7801f021b7, type: 3}
+    texture: {fileID: 0}
+    offset: {x: 0, y: -2.45, z: -0.05}
+  - gameObj: {fileID: 919132149155446097, guid: 5ff781b1b9e5e224889253232bbc3dfe, type: 3}
+    texture: {fileID: 0}
+    offset: {x: 0, y: -2.45, z: -0.05}
+  - gameObj: {fileID: 919132149155446097, guid: 29db3384d3f07704680456f94a913392, type: 3}
+    texture: {fileID: 0}
+    offset: {x: 0, y: -2.45, z: -0.05}
+  - gameObj: {fileID: 919132149155446097, guid: 6d8bb39cdcee24f4bac5d17bc5122ce5, type: 3}
+    texture: {fileID: 0}
+    offset: {x: 0, y: -2.45, z: -0.05}
+  headAccessories:
+  - gameObj: {fileID: 919132149155446097, guid: 1dbaaa72eee88f641a5daec9a4a554ca, type: 3}
+    texture: {fileID: 2100000, guid: 273b5c3ca7ed09e48bbf00f9883cfb7f, type: 2}
+    offset: {x: 0, y: -2.45, z: -0.05}
+  headAccessoryTransform: {fileID: 4722570369559604869}
 --- !u!1 &7790192535314295688
 GameObject:
   m_ObjectHideFlags: 0
