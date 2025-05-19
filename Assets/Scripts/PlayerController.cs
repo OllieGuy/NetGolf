@@ -56,12 +56,12 @@ public class PlayerController : MonoBehaviour
         attackInput = value.isPressed;
     }
     
-    void OnAttack2(InputValue value)
+    void OnAttack2(InputValue value) // BUTTON - REMEMBER TO RESET
     {
         attack2Input = value.isPressed;
     }
     
-    void OnScorecard(InputValue value)
+    void OnScorecard(InputValue value) // BUTTON - REMEMBER TO RESET
     {
         scorecardInput = value.isPressed;
     }

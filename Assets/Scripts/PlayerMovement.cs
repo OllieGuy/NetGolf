@@ -111,15 +111,16 @@ public class PlayerBaseMovement : PlayerBaseState
                     ChangeState(PlayerStates.AimBall);
                 }
             }
-            else if (hasHit && hit.collider.CompareTag("Scorecard"))
+            else if (hasHit && hit.collider.CompareTag("Scorecard") && inventory.scorecard == null)
             {
-                Scorecard card = hit.collider.GetComponent<Scorecard>();
-                inventory.AddScorecard(card);
+                NetworkScorecard networkCard = hit.collider.GetComponent<NetworkScorecard>();
+                inventory.AddScorecard(networkCard.TakeCard());
                 ChangeState(PlayerStates.Scorecard);
             }
         }
         else if (pc.attack2Input)
         {
+            pc.attack2Input = false;
             ChangeState(PlayerStates.PlaceBall);
         }
         

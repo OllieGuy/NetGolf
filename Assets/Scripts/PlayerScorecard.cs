@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerScorecard : PlayerBaseMovement
@@ -50,10 +51,19 @@ public class PlayerScorecard : PlayerBaseMovement
         {
             scorecard.DrawAt(currentCursorPosition, Color.black);
         }
+        
+        if (pc.attack2Input)
+        {
+            pc.attack2Input = false;
+            scorecard.DropCard(transform.position);
+            inventory.scorecard = null;
+            ChangeState(PlayerStates.BaseMovement);
+        }
 
         if (pc.scorecardInput)
         {
             pc.scorecardInput = false;
+            CloseScorecard();
             ChangeState(PlayerStates.BaseMovement);
         }
     }
@@ -61,7 +71,6 @@ public class PlayerScorecard : PlayerBaseMovement
     public override void ExitState()
     {
         base.ExitState();
-        CloseScorecard();
         scorecard = null;
     }
 }

@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class NetworkObjectManager : NetworkBehaviour
 {
@@ -31,9 +32,8 @@ public class NetworkObjectManager : NetworkBehaviour
     {
         AddBall(pos, rot, rpcParams);
     }
+    
 
-
-    //Scorecard stuff
     //[ServerRpc(RequireOwnership = false)]
     //public void SendScorecardServerRpc(byte[] drawingData, ServerRpcParams rpcParams = default)
     //{

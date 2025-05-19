@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Scorecard : MonoBehaviour
 {
+    [SerializeField] GameObject networkedParentObject;
+    NetworkScorecard networkedParent;
     [SerializeField] Renderer cardRenderer;
     [SerializeField] Texture2D baseTexture;
     [SerializeField] GameObject brushIcon;
@@ -13,6 +15,7 @@ public class Scorecard : MonoBehaviour
 
     void Start()
     {
+        networkedParent = networkedParentObject.GetComponent<NetworkScorecard>();
         drawingTexture = new Texture2D(baseTexture.width, baseTexture.height, TextureFormat.RGBA32, false);
         ClearTexture(drawingTexture);
 
@@ -71,6 +74,11 @@ public class Scorecard : MonoBehaviour
         }
         combinedTexture.SetPixels(basePixels);
         combinedTexture.Apply();
+    }
+
+    public void DropCard(Vector3 position)
+    {
+        networkedParent.DropCard(position);
     }
 
     public byte[] GetDrawingBytes() => drawingTexture.EncodeToPNG();
