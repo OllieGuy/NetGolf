@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerCosmetics : MonoBehaviour
+public class PlayerCosmetics : NetworkBehaviour
 {
     [SerializeField] SkinnedMeshRenderer playerRenderer;
 
@@ -15,11 +17,20 @@ public class PlayerCosmetics : MonoBehaviour
     [SerializeField] Accessory[] headAccessories;
     [SerializeField] Transform headAccessoryTransform;
 
+    List<GameObject> ownCosmetics = new();
+
     void Start()
     {
         SetTexture();
         AddAccessories();
-    }
+        foreach (GameObject obj in ownCosmetics)
+        {
+            if (IsOwner)
+            {
+                obj.layer = LayerMask.NameToLayer("PlayerSelf");
+            }
+        }
+    }      
 
     void SetTexture()
     {
@@ -33,6 +44,7 @@ public class PlayerCosmetics : MonoBehaviour
         {
             int accessoryIndex = UnityEngine.Random.Range(0, faceAccessories.Length - 1);
             GameObject accessory = Instantiate(faceAccessories[accessoryIndex].gameObj, faceAccessoryTransform);
+            ownCosmetics.Add(accessory);
             accessory.transform.localPosition = Vector3.zero + faceAccessories[accessoryIndex].offset;
             accessory.GetComponent<MeshRenderer>().material = faceAccessories[accessoryIndex].texture == null ? AccessoryColour() : faceAccessories[accessoryIndex].texture;
         }
@@ -42,6 +54,7 @@ public class PlayerCosmetics : MonoBehaviour
         {
             int hairIndex = UnityEngine.Random.Range(0, hairstyles.Length - 1);
             GameObject accessory = Instantiate(hairstyles[hairIndex].gameObj, headAccessoryTransform);
+            ownCosmetics.Add(accessory);
             accessory.transform.localPosition = Vector3.zero + hairstyles[hairIndex].offset;
             accessory.GetComponent<MeshRenderer>().material = hairstyles[hairIndex].texture == null ? AccessoryColour() : hairstyles[hairIndex].texture;
         }
@@ -49,6 +62,7 @@ public class PlayerCosmetics : MonoBehaviour
         {
             int headAccessoryIndex = UnityEngine.Random.Range(0, headAccessories.Length - 1);
             GameObject accessory = Instantiate(headAccessories[headAccessoryIndex].gameObj, headAccessoryTransform);
+            ownCosmetics.Add(accessory);
             accessory.transform.localPosition = Vector3.zero + headAccessories[headAccessoryIndex].offset;
             accessory.GetComponent<MeshRenderer>().material = headAccessories[headAccessoryIndex].texture == null ? AccessoryColour() : headAccessories[headAccessoryIndex].texture;
 

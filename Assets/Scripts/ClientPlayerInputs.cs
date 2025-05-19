@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class ClientPlayerInputs : NetworkBehaviour
 {
+    [SerializeField] GameObject mesh;
     private PlayerInput inputs;
     private PlayerController playerController;
     private PlayerBaseState playerState;
@@ -29,6 +30,7 @@ public class ClientPlayerInputs : NetworkBehaviour
 
         if (IsOwner)
         {
+            mesh.layer = LayerMask.NameToLayer("PlayerSelf");
             inputs.enabled = true;
             playerController.enabled = true;
             playerCamera.enabled = true;

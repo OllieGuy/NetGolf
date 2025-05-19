@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9137795104499919564}
   - component: {fileID: 7787967235516585905}
   - component: {fileID: 3627649232953778253}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Back Face
   m_TagString: Scorecard
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 8905565199688626991}
   - component: {fileID: 2365902753529833559}
   - component: {fileID: 763874510618805189}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Scorecard
   m_TagString: Scorecard
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7600757810747009343}
   - component: {fileID: 1487177135827124447}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Brush Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 36022077311193648}
   - component: {fileID: 258648052967682809}
   - component: {fileID: 8611854165098152541}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Network Scorecard
   m_TagString: Scorecard
   m_Icon: {fileID: 0}
@@ -446,5 +446,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9010802bacba0cf40ba3900403eb9767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   attachedCard: {fileID: 514335829418109811}
   rb: {fileID: 258648052967682809}
