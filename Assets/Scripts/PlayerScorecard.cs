@@ -5,6 +5,7 @@ public class PlayerScorecard : PlayerBaseMovement
 {
     [SerializeField] Transform scorecardDisplayPosition;
     [SerializeField] Transform scorecardStoredPosition;
+    [SerializeField] int brushSize;
 
     Scorecard scorecard;
     Transform scorecardTransform;
@@ -49,9 +50,11 @@ public class PlayerScorecard : PlayerBaseMovement
 
         if (pc.attackInput)
         {
-            scorecard.DrawAt(currentCursorPosition, Color.black);
+            scorecard.DrawAt(currentCursorPosition, Color.black, brushSize);
         }
-        
+        else if (scorecard.WasDrawring) scorecard.StopDrawing();
+
+
         if (pc.attack2Input)
         {
             pc.attack2Input = false;

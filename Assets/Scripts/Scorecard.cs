@@ -15,6 +15,7 @@ public class Scorecard : MonoBehaviour
 
     public int Height { get { return baseTexture.height;} }
     public int Width { get { return baseTexture.width; } }
+    public bool WasDrawring { get { return wasDrawring; } }
 
     void Start()
     {
@@ -50,9 +51,29 @@ public class Scorecard : MonoBehaviour
         brushIcon.GetComponent<SpriteRenderer>().color = color;
     }
 
-    public void DrawAt(Vector2Int coords, Color color)
+    public void DrawAt(Vector2Int coords, Color color, int brushSize)
     {
-        int brushSize = 2;
+        if (wasDrawring)
+        {
+            foreach (Vector2Int point in InterpolateLine(previousDrawLocation, coords))
+            {
+                DrawBrush(point, color, brushSize);
+            }
+        }
+        else
+        {
+            DrawBrush(coords, color, brushSize);
+        }
+
+        drawingTexture.Apply();
+        CombineTextures();
+
+        previousDrawLocation = coords;
+        wasDrawring = true;
+    }
+
+    void DrawBrush(Vector2Int coords, Color color, int brushSize)
+    {
         for (int i = -brushSize; i < brushSize; i++)
         {
             for (int j = -brushSize; j < brushSize; j++)
@@ -63,8 +84,36 @@ public class Scorecard : MonoBehaviour
                     drawingTexture.SetPixel(px, py, color);
             }
         }
-        drawingTexture.Apply();
-        CombineTextures();
+    }
+
+    System.Collections.Generic.IEnumerable<Vector2Int> InterpolateLine(Vector2Int p0, Vector2Int p1)
+    {
+        int dx = Mathf.Abs(p1.x - p0.x);
+        int dy = Mathf.Abs(p1.y - p0.y);
+
+        int sx = p0.x < p1.x ? 1 : -1;
+        int sy = p0.y < p1.y ? 1 : -1;
+
+        int err = dx - dy;
+
+        Vector2Int current = p0;
+        while (true)
+        {
+            yield return current;
+            if (current == p1) break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy)
+            {
+                err -= dy;
+                current.x += sx;
+            }
+            if (e2 < dx)
+            {
+                err += dx;
+                current.y += sy;
+            }
+        }
     }
 
     void CombineTextures()
@@ -79,9 +128,14 @@ public class Scorecard : MonoBehaviour
         combinedTexture.Apply();
     }
 
+    public void StopDrawing()
+    {
+        wasDrawring = false;
+    }
+
     public void DropCard(Vector3 position)
     {
-        networkedParent.DropCard(position);
+        networkedParent.DropCard(position, GetDrawingBytes());
     }
 
     public byte[] GetDrawingBytes() => drawingTexture.EncodeToPNG();

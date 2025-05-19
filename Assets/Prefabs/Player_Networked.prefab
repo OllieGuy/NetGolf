@@ -2561,6 +2561,7 @@ MonoBehaviour:
   sprintFOVSmooth: 20
   scorecardDisplayPosition: {fileID: 3105700706787398650}
   scorecardStoredPosition: {fileID: 6135142254867390450}
+  brushSize: 2
 --- !u!114 &7717638504000468512
 MonoBehaviour:
   m_ObjectHideFlags: 0
