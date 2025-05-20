@@ -448,4 +448,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   attachedCard: {fileID: 514335829418109811}
+  scorecardCollider: {fileID: 36022077311193648}
   rb: {fileID: 258648052967682809}

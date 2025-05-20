@@ -74,6 +74,8 @@ public class PlayerCosmetics : NetworkBehaviour
             return accessoryColors[colorInList];
         }
     }
+
+    // TODO NETWORK THIS TO SYNC CLIENT
 }
 
 [Serializable]

@@ -1,18 +1,30 @@
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class NetworkScorecard : NetworkBehaviour
 {
     [SerializeField] GameObject attachedCard;
+    [SerializeField] BoxCollider scorecardCollider;
     [SerializeField] Rigidbody rb;
 
     byte[] drawnOnCard;
+    ulong holdingClientId = ulong.MaxValue;
 
-    public Scorecard TakeCard()
+    public Scorecard TakeCard(NetworkObject playerObject)
     {
+        if (holdingClientId != playerObject.OwnerClientId) return null;
+
+        holdingClientId = playerObject.OwnerClientId;
+
         rb.isKinematic = true;
+        scorecardCollider.enabled = false;
+
+        DisableCardForOthersClientRpc(holdingClientId);
+
         Scorecard cardData = attachedCard.GetComponent<Scorecard>();
         if (drawnOnCard != null) cardData.LoadDrawingFromBytes(drawnOnCard);
+
         return cardData;
     }
 
@@ -34,10 +46,24 @@ public class NetworkScorecard : NetworkBehaviour
     {
         transform.position = position;
         rb.isKinematic = false;
+        scorecardCollider.enabled = true;
+
         attachedCard.transform.parent = transform;
         attachedCard.transform.localPosition = Vector3.zero;
-        transform.rotation = attachedCard.transform.rotation;
         attachedCard.transform.localRotation = Quaternion.identity;
+        transform.rotation = attachedCard.transform.rotation;
+
+        attachedCard.SetActive(true);
+        holdingClientId = ulong.MaxValue;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void DisableCardForOthersClientRpc(ulong holderId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != holderId)
+        {
+            attachedCard.SetActive(false);
+        }
     }
 
     [Rpc(SendTo.Server)]

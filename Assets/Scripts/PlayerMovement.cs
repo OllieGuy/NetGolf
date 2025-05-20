@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -114,8 +115,13 @@ public class PlayerBaseMovement : PlayerBaseState
             else if (hasHit && hit.collider.CompareTag("Scorecard") && inventory.scorecard == null)
             {
                 NetworkScorecard networkCard = hit.collider.GetComponent<NetworkScorecard>();
-                inventory.AddScorecard(networkCard.TakeCard());
-                ChangeState(PlayerStates.Scorecard);
+                Scorecard card = networkCard.TakeCard(GetComponent<NetworkObject>());
+                if (card != null)
+                {
+                    inventory.AddScorecard(card);
+                    ChangeState(PlayerStates.Scorecard);
+                }
+                
             }
         }
         else if (pc.attack2Input)

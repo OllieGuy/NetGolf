@@ -32,17 +32,4 @@ public class NetworkObjectManager : NetworkBehaviour
     {
         AddBall(pos, rot, rpcParams);
     }
-    
-
-    //[ServerRpc(RequireOwnership = false)]
-    //public void SendScorecardServerRpc(byte[] drawingData, ServerRpcParams rpcParams = default)
-    //{
-    //    UpdateScorecardClientRpc(drawingData);
-    //}
-
-    //[ClientRpc]
-    //public void UpdateScorecardClientRpc(byte[] drawingData)
-    //{
-    //    LoadDrawingFromBytes(drawingData);
-    //}
 }
