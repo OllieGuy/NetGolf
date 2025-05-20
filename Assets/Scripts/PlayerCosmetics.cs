@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerCosmetics : NetworkBehaviour
 {
@@ -16,66 +17,99 @@ public class PlayerCosmetics : NetworkBehaviour
     [SerializeField] Accessory[] hairstyles;
     [SerializeField] Accessory[] headAccessories;
     [SerializeField] Transform headAccessoryTransform;
-
     List<GameObject> ownCosmetics = new();
 
-    void Start()
-    {
-        SetTexture();
-        AddAccessories();
-        foreach (GameObject obj in ownCosmetics)
-        {
-            if (IsOwner)
-            {
-                obj.layer = LayerMask.NameToLayer("PlayerSelf");
-            }
-        }
-    }      
+    NetworkVariable<CosmeticData> syncedCosmetics = new();
 
-    void SetTexture()
+    public override void OnNetworkSpawn()
     {
-        int skinIndex = UnityEngine.Random.Range(0, skins.Length - 1);
-        playerRenderer.material = skins[skinIndex];
+        if (IsServer)
+        {
+            CosmeticData data = GenerateRandomCosmetics();
+            syncedCosmetics.Value = data;
+        }
+
+        syncedCosmetics.OnValueChanged += (_, newValue) => ApplyCosmetics(newValue);
+        ApplyCosmetics(syncedCosmetics.Value);
     }
 
-    void AddAccessories()
+    CosmeticData GenerateRandomCosmetics()
     {
-        if (UnityEngine.Random.Range(0, 100) < 10) // 10% face accessory chance
+        CosmeticData data = new CosmeticData
         {
-            int accessoryIndex = UnityEngine.Random.Range(0, faceAccessories.Length - 1);
-            GameObject accessory = Instantiate(faceAccessories[accessoryIndex].gameObj, faceAccessoryTransform);
-            ownCosmetics.Add(accessory);
-            accessory.transform.localPosition = Vector3.zero + faceAccessories[accessoryIndex].offset;
-            accessory.GetComponent<MeshRenderer>().material = faceAccessories[accessoryIndex].texture == null ? AccessoryColour() : faceAccessories[accessoryIndex].texture;
-        }
+            skinIndex = UnityEngine.Random.Range(0, skins.Length),
+
+            faceAccessoryIndex = UnityEngine.Random.Range(0, 100) < 10 ?
+                UnityEngine.Random.Range(0, faceAccessories.Length) : -1,
+
+            hairIndex = -1,
+            hatIndex = -1
+        };
 
         int headSeed = UnityEngine.Random.Range(0, 100);
-        if (headSeed < 75) // 75% chance for hair
-        {
-            int hairIndex = UnityEngine.Random.Range(0, hairstyles.Length - 1);
-            GameObject accessory = Instantiate(hairstyles[hairIndex].gameObj, headAccessoryTransform);
-            ownCosmetics.Add(accessory);
-            accessory.transform.localPosition = Vector3.zero + hairstyles[hairIndex].offset;
-            accessory.GetComponent<MeshRenderer>().material = hairstyles[hairIndex].texture == null ? AccessoryColour() : hairstyles[hairIndex].texture;
-        }
-        else if (headSeed >= 95) // 5% chance for hat
-        {
-            int headAccessoryIndex = UnityEngine.Random.Range(0, headAccessories.Length - 1);
-            GameObject accessory = Instantiate(headAccessories[headAccessoryIndex].gameObj, headAccessoryTransform);
-            ownCosmetics.Add(accessory);
-            accessory.transform.localPosition = Vector3.zero + headAccessories[headAccessoryIndex].offset;
-            accessory.GetComponent<MeshRenderer>().material = headAccessories[headAccessoryIndex].texture == null ? AccessoryColour() : headAccessories[headAccessoryIndex].texture;
+        if (headSeed < 75)
+            data.hairIndex = UnityEngine.Random.Range(0, hairstyles.Length);
+        else if (headSeed >= 95)
+            data.hatIndex = UnityEngine.Random.Range(0, headAccessories.Length);
 
-        }
+        data.faceColorIndex = UnityEngine.Random.Range(0, accessoryColors.Length);
+        data.hairColorIndex = UnityEngine.Random.Range(0, accessoryColors.Length);
+        data.hatColorIndex = UnityEngine.Random.Range(0, accessoryColors.Length);
 
-        Material AccessoryColour()
-        {
-            int colorInList = UnityEngine.Random.Range(0, accessoryColors.Length - 1);
-            return accessoryColors[colorInList];
-        }
+        return data;
     }
 
-    // TODO NETWORK THIS TO SYNC CLIENT
+    void ApplyCosmetics(CosmeticData data)
+    {
+        playerRenderer.material = skins[data.skinIndex];
+
+        foreach (var obj in ownCosmetics)
+            Destroy(obj);
+        ownCosmetics.Clear();
+
+        // Face Accessory
+        if (data.faceAccessoryIndex >= 0)
+        {
+            var acc = Instantiate(faceAccessories[data.faceAccessoryIndex].gameObj, faceAccessoryTransform);
+            ownCosmetics.Add(acc);
+            acc.transform.localPosition = faceAccessories[data.faceAccessoryIndex].offset;
+            acc.GetComponent<MeshRenderer>().material = 
+                faceAccessories[data.faceAccessoryIndex].texture != null ? 
+                faceAccessories[data.faceAccessoryIndex].texture : 
+                accessoryColors[data.faceColorIndex];
+        }
+
+        // Hair
+        if (data.hairIndex >= 0)
+        {
+            var acc = Instantiate(hairstyles[data.hairIndex].gameObj, headAccessoryTransform);
+            ownCosmetics.Add(acc);
+            acc.transform.localPosition = hairstyles[data.hairIndex].offset;
+            acc.GetComponent<MeshRenderer>().material = 
+                hairstyles[data.hairIndex].texture != null ? 
+                hairstyles[data.hairIndex].texture : 
+                accessoryColors[data.hairColorIndex];
+        }
+
+        // Hat
+        if (data.hatIndex >= 0)
+        {
+            var acc = Instantiate(headAccessories[data.hatIndex].gameObj, headAccessoryTransform);
+            ownCosmetics.Add(acc);
+            acc.transform.localPosition = headAccessories[data.hatIndex].offset;
+            acc.GetComponent<MeshRenderer>().material = 
+                headAccessories[data.hatIndex].texture != null ? 
+                headAccessories[data.hatIndex].texture : 
+                accessoryColors[data.hatColorIndex];
+        }
+
+        // Change layer so camera doesn't render
+        if (IsOwner)
+        {
+            foreach (GameObject obj in ownCosmetics)
+                obj.layer = LayerMask.NameToLayer("PlayerSelf");
+        }
+    }
 }
 
 [Serializable]
@@ -84,4 +118,26 @@ public class Accessory
     public GameObject gameObj;
     public Material texture;
     public Vector3 offset;
+}
+
+public struct CosmeticData : INetworkSerializable
+{
+    public int skinIndex;
+    public int faceAccessoryIndex;
+    public int hairIndex;
+    public int hatIndex;
+    public int faceColorIndex;
+    public int hairColorIndex;
+    public int hatColorIndex;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref skinIndex);
+        serializer.SerializeValue(ref faceAccessoryIndex);
+        serializer.SerializeValue(ref hairIndex);
+        serializer.SerializeValue(ref hatIndex);
+        serializer.SerializeValue(ref faceColorIndex);
+        serializer.SerializeValue(ref hairColorIndex);
+        serializer.SerializeValue(ref hatColorIndex);
+    }
 }
