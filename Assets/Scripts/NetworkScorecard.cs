@@ -13,7 +13,7 @@ public class NetworkScorecard : NetworkBehaviour
 
     public Scorecard TakeCard(NetworkObject playerObject)
     {
-        if (holdingClientId != playerObject.OwnerClientId) return null;
+        if (holdingClientId != ulong.MaxValue && holdingClientId != playerObject.OwnerClientId) return null;
 
         holdingClientId = playerObject.OwnerClientId;
 
