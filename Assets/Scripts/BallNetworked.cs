@@ -48,4 +48,14 @@ public class BallNetworked : NetworkBehaviour
             playerState.TriggerRagdollServerRpc(rb.linearVelocity, collision.contacts[0].point);
         }
     }
+    
+    void OnTriggerEnter(Collider collider)
+    {
+        HoleNetworked hole = collider.gameObject.GetComponent<HoleNetworked>();
+        if (hole != null)
+        {
+            hole.OnBallEntered();
+            Destroy(gameObject);
+        }
+    }
 }
