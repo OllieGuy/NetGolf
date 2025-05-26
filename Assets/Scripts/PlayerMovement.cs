@@ -104,7 +104,7 @@ public class PlayerBaseMovement : PlayerBaseState
             if (hasHit && hit.collider.CompareTag("Ball"))
             {
                 BallNetworked networkBall = hit.collider.GetComponent<BallNetworked>();
-                if (networkBall != null && networkBall.IsOwner)
+                if (networkBall != null && networkBall.IsOwner && networkBall.Hittable)
                 {
                     PlayerBaseState state = GetState(PlayerStates.AimBall);
                     PlayerAimBall aimState = (PlayerAimBall)state;

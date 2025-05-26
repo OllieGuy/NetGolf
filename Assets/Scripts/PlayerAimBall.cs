@@ -12,32 +12,36 @@ public class PlayerAimBall : PlayerBaseState
     [SerializeField] private float defaultAimPower = 5f;
     [SerializeField] private float defaultYAim = 1f;
 
-    private GameObject currentBall;
+    private GameObject ballGameObj;
     private Rigidbody ballRb;
     private BallAimPreview ballAp;
     private float aimPower;
     private float yAim;
+
+    BallNetworked networkBall;
 
     public void SetBall(GameObject ball)
     {
         aimPower = defaultAimPower;
         yAim = defaultYAim;
 
-        currentBall = ball;
-        ballRb = currentBall.GetComponent<Rigidbody>();
+        ballGameObj = ball;
+        ballRb = ballGameObj.GetComponent<Rigidbody>();
         ballRb.isKinematic = false;
-        ballAp = currentBall.GetComponentInChildren<BallAimPreview>();
+        networkBall = ballGameObj.GetComponent<BallNetworked>();
+        ballAp = networkBall.BallAimPreview;
         ballAp.gameObject.SetActive(true);
         ballAp.Initialise(maxPower);
         Vector3 startDirection = fpCamera.transform.forward;
         startDirection.y = 0;
         startDirection.Normalize();
-        currentBall.transform.rotation = Quaternion.LookRotation(startDirection);
+        networkBall.Stopball();
+        ballGameObj.transform.rotation = Quaternion.LookRotation(startDirection);
     }
 
     public override void StartState()
     {
-        if (currentBall == null || ballRb == null)
+        if (ballGameObj == null || ballRb == null)
         {
             ChangeState(PlayerStates.BaseMovement);
             return;
@@ -62,6 +66,7 @@ public class PlayerAimBall : PlayerBaseState
     public override void ExitState()
     {
         charController.enabled = true;
+        networkBall = null;
     }
 
     private void LookUpdate()
@@ -74,16 +79,15 @@ public class PlayerAimBall : PlayerBaseState
 
     private void AimUpdate()
     {
-        BallNetworked networkBall = currentBall.GetComponent<BallNetworked>();
         if (networkBall != null && networkBall.IsOwner)
         {
             networkBall.RotateBallServerRpc(Vector3.up * pc.moveInput.x * horizontalAimSensitivity * Time.deltaTime);
         }
         yAim += pc.moveInput.y * verticalAimSensitivity * Time.deltaTime;
 
-        Vector3 aim = new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z);
+        Vector3 aim = new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z);
         aim.Normalize();
-        Debug.DrawRay(currentBall.transform.position, aim * aimPower, Color.green);
+        Debug.DrawRay(ballGameObj.transform.position, aim * aimPower, Color.green);
         
     }
     
@@ -97,14 +101,13 @@ public class PlayerAimBall : PlayerBaseState
 
     private void ShowPreview()
     {
-        ballAp.UpdatePreview(currentBall.transform.position, new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z), aimPower);
+        ballAp.UpdatePreview(ballGameObj.transform.position, new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z), aimPower);
     }
 
     private void HitBall()
     {
-        Vector3 direction = new Vector3(currentBall.transform.forward.x, yAim, currentBall.transform.forward.z);
+        Vector3 direction = new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z);
 
-        BallNetworked networkBall = currentBall.GetComponent<BallNetworked>();
         if (networkBall != null && networkBall.IsOwner)
         {
             networkBall.HitBallServerRpc(direction, aimPower);

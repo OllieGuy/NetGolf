@@ -6,12 +6,22 @@ public class BallNetworked : NetworkBehaviour
     private Rigidbody rb;
 
     public bool playerCollision;
+    [SerializeField] BallAimPreview ballAimPreview;
+    
+    public BallAimPreview BallAimPreview { get { return ballAimPreview;} }
+    public bool Hittable { get { return rb.linearVelocity.sqrMagnitude < 0.1f; } }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
 
+    public void Stopball()
+    {
+        transform.rotation = Quaternion.identity;
+        rb.isKinematic = true;
+    }
+    
     public void LaunchBall(Vector3 direction, float power)
     {
         rb.isKinematic = false;
