@@ -1,3 +1,4 @@
+using Unity.Burst.Intrinsics;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,10 +10,20 @@ public class BallNetworked : NetworkBehaviour
     private GroundMaterial currentGroundMaterial;
 
     public bool playerCollision;
-    [SerializeField] BallAimPreview ballAimPreview;
-    
-    public BallAimPreview BallAimPreview { get { return ballAimPreview;} }
-    public bool Hittable { get { return rb.linearVelocity.sqrMagnitude < 0.1f; } }
+    [SerializeField] private BallAimPreview ballAimPreview;
+    [SerializeField] private Transform aimRotation;
+    public BallAimPreview BallAimPreview => ballAimPreview;
+    public Vector3 BallAimDirection => aimRotation.forward;
+    public bool Hittable => rb.linearVelocity.sqrMagnitude < 0.1f;
+
+    // Prediction and reconciliation
+    private CircularBuffer<BallState> stateBuffer;
+    private NetworkTimer networkTimer;
+    private const float reconciliationThreshold = 0.01f;
+    private const float rotationThresholdDegrees = 1f;
+
+    [SerializeField] private int bufferSize = 1024;
+    [SerializeField] private float tickRate = 60f;
 
     private void Awake()
     {
@@ -20,6 +31,61 @@ public class BallNetworked : NetworkBehaviour
         baseLinearDrag = rb.linearDamping;
         baseAngularDrag = rb.angularDamping;
         currentGroundMaterial = null;
+
+        stateBuffer = new CircularBuffer<BallState>(bufferSize);
+        networkTimer = new NetworkTimer(tickRate);
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsOwner)
+        {
+            networkTimer.Update(Time.fixedDeltaTime);
+            if (networkTimer.ShouldTick())
+            {
+                int tick = networkTimer.CurrentTick;
+
+                // Predict
+                BallState predictedState = new BallState
+                {
+                    position = transform.position,
+                    rotation = transform.rotation,
+                    velocity = rb.linearVelocity,
+                    angularVelocity = rb.angularVelocity
+                };
+
+                stateBuffer.Add(predictedState, tick);
+                SendStateToServerServerRpc(predictedState.position, predictedState.rotation, tick);
+            }
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SendStateToServerServerRpc(Vector3 position, Quaternion rotation, int tick)
+    {
+        if (IsServer)
+        {
+            SendAuthoritativeStateClientRpc(transform.position, transform.rotation, tick);
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void SendAuthoritativeStateClientRpc(Vector3 serverPos, Quaternion serverRot, int tick)
+    {
+        if (!IsOwner) return;
+
+        BallState predicted = stateBuffer.Get(tick);
+        float positionError = (predicted.position - serverPos).sqrMagnitude;
+        float rotationError = Quaternion.Angle(predicted.rotation, serverRot);
+
+        if (positionError > reconciliationThreshold || rotationError > rotationThresholdDegrees)
+        {
+            // Optionally use interpolation here for smoothing
+            rb.position = serverPos;
+            rb.rotation = serverRot;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 
     public void Stopball()
@@ -27,28 +93,23 @@ public class BallNetworked : NetworkBehaviour
         transform.rotation = Quaternion.identity;
         rb.isKinematic = true;
     }
-    
-    public void LaunchBall(Vector3 direction, float power)
+
+    public void HitBall(Vector3 direction, float power)
     {
         rb.isKinematic = false;
         rb.AddForce(direction * power, ForceMode.Impulse);
     }
-    
-    public void RotateBall(Vector3 eulers)
+
+    public void RotateAim(Vector3 eulers)
     {
-        transform.Rotate(eulers);
+        aimRotation.rotation = Quaternion.Euler(aimRotation.rotation.eulerAngles + eulers);
+        Debug.DrawRay(transform.position, aimRotation.transform.forward, Color.green);
     }
 
     [Rpc(SendTo.Server)]
-    public void RotateBallServerRpc(Vector3 eulers)
+    public void HitBallServerRpc(float power)
     {
-        RotateBall(eulers);
-    }
-    
-    [Rpc(SendTo.Server)]
-    public void HitBallServerRpc(Vector3 direction, float power)
-    {
-        LaunchBall(direction, power);
+        HitBall(aimRotation.forward, power);
     }
 
     void Update()
@@ -58,8 +119,6 @@ public class BallNetworked : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("ENTER: " + collision.gameObject.name);
-
         if (collision.gameObject.TryGetComponent(out GroundMaterialApplier applier) && applier.groundMaterial != null)
         {
             ApplyGroundMaterial(applier.groundMaterial);
@@ -72,11 +131,8 @@ public class BallNetworked : NetworkBehaviour
         }
     }
 
-
     void OnCollisionExit(Collision collision)
     {
-        //Debug.Log("EXIT: " + collision.gameObject.name);
-
         if (collision.gameObject.TryGetComponent(out GroundMaterialApplier applier) && applier.groundMaterial == currentGroundMaterial)
         {
             RemoveGroundMaterial();
@@ -106,4 +162,12 @@ public class BallNetworked : NetworkBehaviour
             Destroy(gameObject);
         }
     }
+}
+
+public struct BallState
+{
+    public Vector3 position;
+    public Quaternion rotation;
+    public Vector3 velocity;
+    public Vector3 angularVelocity;
 }

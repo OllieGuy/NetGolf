@@ -6,7 +6,7 @@ using UnityEngine.Windows;
 public class PlayerAimBall : PlayerBaseState
 {
     [SerializeField] private float horizontalAimSensitivity = 20f;
-    [SerializeField] private float verticalAimSensitivity = 2f;
+    [SerializeField] private float verticalAimSensitivity = 20f;
     [SerializeField] private float powerAimSensitivity = 5f;
     [SerializeField] private float maxPower = 30f;
     [SerializeField] private float defaultAimPower = 5f;
@@ -81,14 +81,10 @@ public class PlayerAimBall : PlayerBaseState
     {
         if (networkBall != null && networkBall.IsOwner)
         {
-            networkBall.RotateBallServerRpc(Vector3.up * pc.moveInput.x * horizontalAimSensitivity * Time.deltaTime);
+            networkBall.RotateAim(
+                Vector3.up * pc.moveInput.x * horizontalAimSensitivity * Time.deltaTime + 
+                Vector3.right * -pc.moveInput.y * verticalAimSensitivity * Time.deltaTime);
         }
-        yAim += pc.moveInput.y * verticalAimSensitivity * Time.deltaTime;
-
-        Vector3 aim = new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z);
-        aim.Normalize();
-        Debug.DrawRay(ballGameObj.transform.position, aim * aimPower, Color.green);
-        
     }
     
     private void PowerUpdate()
@@ -101,16 +97,15 @@ public class PlayerAimBall : PlayerBaseState
 
     private void ShowPreview()
     {
-        ballAp.UpdatePreview(ballGameObj.transform.position, new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z), aimPower);
+        //ballAp.UpdatePreview(ballGameObj.transform.position, new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z), aimPower);
+        ballAp.UpdatePreview(ballGameObj.transform.position, networkBall.BallAimDirection, aimPower);
     }
 
     private void HitBall()
     {
-        Vector3 direction = new Vector3(ballGameObj.transform.forward.x, yAim, ballGameObj.transform.forward.z);
-
         if (networkBall != null && networkBall.IsOwner)
         {
-            networkBall.HitBallServerRpc(direction, aimPower);
+            networkBall.HitBallServerRpc(aimPower);
             ballAp.gameObject.SetActive(false);
         }
     }

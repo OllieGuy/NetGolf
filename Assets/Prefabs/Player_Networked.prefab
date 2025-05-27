@@ -2534,7 +2534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVelocity: {x: 0, y: 0, z: 0}
   horizontalAimSensitivity: 20
-  verticalAimSensitivity: 2
+  verticalAimSensitivity: 20
   powerAimSensitivity: 5
   maxPower: 30
   defaultAimPower: 5
@@ -2625,6 +2625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853670fe8ab03b140a929aa250250cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   playerRenderer: {fileID: 6809610661347851895}
   skins:
   - {fileID: 2100000, guid: d07b665533b127b4e9d8347bd70be09b, type: 2}

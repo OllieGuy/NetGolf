@@ -1,36 +1,42 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class NetworkObjectManager : NetworkBehaviour
 {
-    [SerializeField] GameObject ballPrefab;
+    [SerializeField] private GameObject ballPrefab;
 
-    static NetworkObjectManager instance = null;
-    
-    public static NetworkObjectManager Instance { get { return instance; } }
+    private static NetworkObjectManager instance;
+
+    public static NetworkObjectManager Instance => instance;
 
     void Awake()
     {
         if (instance == null) instance = this;
     }
 
-    static public void AddBall(Vector3 pos, Quaternion rot, RpcParams rpcParams = default)
+    public void AddBall(Vector3 pos, Quaternion rot, ulong ownerClientId)
     {
-        GameObject instantiatedBall = Instantiate(instance.ballPrefab, pos, rot);
-        var netObj = instantiatedBall.GetComponent<NetworkObject>();
-        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
-        netObj.gameObject.transform.parent = instance.gameObject.transform;
+        GameObject ball = Instantiate(ballPrefab, pos, rot);
+        var netObj = ball.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(ownerClientId);
+        ball.transform.parent = transform;
     }
-    
-    static public void AddBallFromClient(Vector3 pos, Quaternion rot, RpcParams rpcParams = default)
+
+    public static void RequestBall(Vector3 pos, Quaternion rot)
     {
-        instance.AddBallRpc(pos, rot, rpcParams);
+        if (NetworkManager.Singleton.IsServer)
+        {
+            instance.AddBall(pos, rot, NetworkManager.Singleton.LocalClientId);
+        }
+        else if (NetworkManager.Singleton.IsClient)
+        {
+            instance.RequestBallServerRpc(pos, rot, NetworkManager.Singleton.LocalClientId);
+        }
     }
 
     [Rpc(SendTo.Server)]
-    void AddBallRpc(Vector3 pos, Quaternion rot, RpcParams rpcParams = default)
+    private void RequestBallServerRpc(Vector3 pos, Quaternion rot, ulong senderId)
     {
-        AddBall(pos, rot, rpcParams);
+        AddBall(pos, rot, senderId);
     }
 }

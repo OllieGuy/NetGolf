@@ -11,14 +11,7 @@ public class BallPlacement : MonoBehaviour
 
     public void PlaceBall()
     {
-        if (isPlaceable && NetworkManager.Singleton.IsServer)
-        {
-            NetworkObjectManager.AddBall(transform.position, transform.rotation);
-        }
-        else if (isPlaceable && NetworkManager.Singleton.IsClient)
-        {
-            NetworkObjectManager.AddBallFromClient(transform.position, transform.rotation);
-        }
+        if (isPlaceable) NetworkObjectManager.RequestBall(transform.position, transform.rotation);
     }
 
     private void OnEnable()
