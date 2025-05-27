@@ -17,9 +17,10 @@ public class NetworkObjectManager : NetworkBehaviour
 
     static public void AddBall(Vector3 pos, Quaternion rot, RpcParams rpcParams = default)
     {
-        GameObject instantiatedBall = Instantiate(instance.ballPrefab, pos, rot, instance.gameObject.transform);
+        GameObject instantiatedBall = Instantiate(instance.ballPrefab, pos, rot);
         var netObj = instantiatedBall.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+        netObj.gameObject.transform.parent = instance.gameObject.transform;
     }
     
     static public void AddBallFromClient(Vector3 pos, Quaternion rot, RpcParams rpcParams = default)

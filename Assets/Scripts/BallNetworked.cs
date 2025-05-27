@@ -58,7 +58,7 @@ public class BallNetworked : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("ENTER: " + collision.gameObject.name);
+        //Debug.Log("ENTER: " + collision.gameObject.name);
 
         if (collision.gameObject.TryGetComponent(out GroundMaterialApplier applier) && applier.groundMaterial != null)
         {
@@ -75,7 +75,7 @@ public class BallNetworked : NetworkBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        Debug.Log("EXIT: " + collision.gameObject.name);
+        //Debug.Log("EXIT: " + collision.gameObject.name);
 
         if (collision.gameObject.TryGetComponent(out GroundMaterialApplier applier) && applier.groundMaterial == currentGroundMaterial)
         {
