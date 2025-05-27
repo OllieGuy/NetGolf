@@ -4,6 +4,9 @@ using UnityEngine;
 public class BallNetworked : NetworkBehaviour
 {
     private Rigidbody rb;
+    private float baseLinearDrag;
+    private float baseAngularDrag;
+    private GroundMaterial currentGroundMaterial;
 
     public bool playerCollision;
     [SerializeField] BallAimPreview ballAimPreview;
@@ -14,6 +17,9 @@ public class BallNetworked : NetworkBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        baseLinearDrag = rb.linearDamping;
+        baseAngularDrag = rb.angularDamping;
+        currentGroundMaterial = null;
     }
 
     public void Stopball()
@@ -52,19 +58,51 @@ public class BallNetworked : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("ENTER: " + collision.gameObject.name);
+
+        if (collision.gameObject.TryGetComponent(out GroundMaterialApplier applier) && applier.groundMaterial != null)
+        {
+            ApplyGroundMaterial(applier.groundMaterial);
+        }
+
         PlayerState playerState = collision.gameObject.GetComponent<PlayerState>();
         if (playerState != null && playerCollision)
         {
             playerState.TriggerRagdollServerRpc(rb.linearVelocity, collision.contacts[0].point);
         }
     }
-    
+
+
+    void OnCollisionExit(Collision collision)
+    {
+        Debug.Log("EXIT: " + collision.gameObject.name);
+
+        if (collision.gameObject.TryGetComponent(out GroundMaterialApplier applier) && applier.groundMaterial == currentGroundMaterial)
+        {
+            RemoveGroundMaterial();
+        }
+    }
+
+    void ApplyGroundMaterial(GroundMaterial material)
+    {
+        currentGroundMaterial = material;
+        rb.linearDamping = material.linearDrag;
+        rb.angularDamping = material.angularDrag;
+    }
+
+    void RemoveGroundMaterial()
+    {
+        rb.linearDamping = baseLinearDrag;
+        rb.angularDamping = baseAngularDrag;
+        currentGroundMaterial = null;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         HoleNetworked hole = collider.gameObject.GetComponent<HoleNetworked>();
         if (hole != null)
         {
-            hole.OnBallEntered();
+            hole.OnBallEntered(this);
             Destroy(gameObject);
         }
     }

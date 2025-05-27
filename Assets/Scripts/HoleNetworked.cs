@@ -6,8 +6,14 @@ public class HoleNetworked : NetworkBehaviour
 {
     [SerializeField] MMF_Player HoleFeedback;
 
-    public void OnBallEntered()
+    public void OnBallEntered(BallNetworked ball)
     {
-        HoleFeedback.PlayFeedbacks();
+        BallInHoleRpc(ball.OwnerClientId);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void BallInHoleRpc(ulong ballOwnerId)
+    {
+        if (ballOwnerId == NetworkManager.Singleton.LocalClientId) HoleFeedback.PlayFeedbacks();
     }
 }

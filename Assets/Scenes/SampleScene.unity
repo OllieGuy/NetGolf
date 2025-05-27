@@ -773,8 +773,9 @@ GameObject:
   - component: {fileID: 811508684}
   - component: {fileID: 811508683}
   - component: {fileID: 811508682}
+  - component: {fileID: 811508685}
   m_Layer: 6
-  m_Name: Prop (2)
+  m_Name: Bunker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,7 +803,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 811508680}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1343036219}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -839,7 +840,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9f644db28161ead40b37fb3fb393ac6c, type: 2}
+  - {fileID: 2100000, guid: 4172a35eadb1d76499e8abe3f0ed3cd2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -869,6 +870,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 811508680}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &811508685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811508680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f259a9f14592284bac081be763e8f0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundMaterial: {fileID: 11400000, guid: 50481246353d5c245ab7b63eeb0e922c, type: 2}
 --- !u!1 &821115960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,6 +1361,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986653731}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!134 &1201627943
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DynamicMaterial
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1232670027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1563,6 +1590,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300189016}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!134 &1343036219
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DynamicMaterial
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1432653644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,6 +2040,7 @@ GameObject:
   - component: {fileID: 2116402655}
   - component: {fileID: 2116402654}
   - component: {fileID: 2116402653}
+  - component: {fileID: 2116402657}
   m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
@@ -2014,7 +2055,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116402652}
-  m_Material: {fileID: 13400000, guid: 6ed4a67388d10554d9f23e33fbd39f6e, type: 2}
+  m_Material: {fileID: 1201627943}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2051,7 +2092,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 520ab0bc706aeb7408ec2e894320eac9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2105,6 +2146,19 @@ Transform:
   - {fileID: 1300189017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2116402657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116402652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f259a9f14592284bac081be763e8f0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundMaterial: {fileID: 11400000, guid: 422faa6ca3b03b14088c5c2b59329bb3, type: 2}
 --- !u!1001 &6475790852831996370
 PrefabInstance:
   m_ObjectHideFlags: 0
