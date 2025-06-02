@@ -1,5 +1,6 @@
 using Unity.Burst.Intrinsics;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class BallNetworked : NetworkBehaviour
@@ -16,77 +17,98 @@ public class BallNetworked : NetworkBehaviour
     public Vector3 BallAimDirection => aimRotation.forward;
     public bool Hittable => rb.linearVelocity.sqrMagnitude < 0.1f;
 
-    // Prediction and reconciliation
-    //private CircularBuffer<BallState> stateBuffer;
-    //private NetworkTimer networkTimer;
-    //private const float reconciliationThreshold = 0.01f;
-    //private const float rotationThresholdDegrees = 1f;
+    [SerializeField] NetworkTransform networkTransform;
+    private NetworkTimer networkTimer;
+    private CircularBuffer<BallState> clientStateBuffer;
+    private CircularBuffer<BallState> serverStateBuffer;
+    private const float reconciliationThreshold = 0.01f;
 
-    [SerializeField] private int bufferSize = 1024;
-    [SerializeField] private float tickRate = 60f;
+    [SerializeField] private int bufferSize = 512;
+    [SerializeField] private float tickRate = 30f;
 
-    private void Awake()
+    bool initialised = false;
+
+    private void Initialise()
     {
         rb = GetComponent<Rigidbody>();
         baseLinearDrag = rb.linearDamping;
         baseAngularDrag = rb.angularDamping;
         currentGroundMaterial = null;
 
-        //stateBuffer = new CircularBuffer<BallState>(bufferSize);
-        //networkTimer = new NetworkTimer(tickRate);
+        clientStateBuffer = new(bufferSize);
+        serverStateBuffer = new(bufferSize);
+        networkTimer = new(tickRate);
+        if (!IsOwner || IsServer)
+        {
+            networkTransform.enabled = true;
+        }
+    }
+
+    private void Update()
+    {
+        if (!initialised)
+        {
+            Initialise();
+            initialised = true;
+        }
+        networkTimer.Update(Time.deltaTime);
+        playerCollision = rb.linearVelocity.sqrMagnitude > 1f;
     }
 
     private void FixedUpdate()
     {
-        //if (IsOwner)
-        //{
-        //    networkTimer.Update(Time.fixedDeltaTime);
-        //    if (networkTimer.ShouldTick())
-        //    {
-        //        int tick = networkTimer.CurrentTick;
+        if (networkTimer != null && networkTimer.ShouldTick())
+        {
+            int tick = networkTimer.CurrentTick;
+            if (IsServer)
+            {
+                BallState state = new BallState
+                {
+                    position = transform.position,
+                    velocity = rb.linearVelocity,
+                    angularVelocity = rb.angularVelocity
+                };
 
-        //        // Predict
-        //        BallState predictedState = new BallState
-        //        {
-        //            position = transform.position,
-        //            rotation = transform.rotation,
-        //            velocity = rb.linearVelocity,
-        //            angularVelocity = rb.angularVelocity
-        //        };
+                serverStateBuffer.Add(state, tick);
+            }
+            
+            if (IsOwner)
+            {
+                BallState clientState = new BallState
+                {
+                    position = transform.position,
+                    velocity = rb.linearVelocity,
+                    angularVelocity = rb.angularVelocity
+                };
 
-        //        stateBuffer.Add(predictedState, tick);
-        //        SendStateToServerServerRpc(predictedState.position, predictedState.rotation, tick);
-        //    }
-        //}
+                clientStateBuffer.Add(clientState, tick);
+                SendStateToServerServerRpc(clientState, tick);
+            }
+        }
     }
 
-    //[Rpc(SendTo.Server)]
-    //private void SendStateToServerServerRpc(Vector3 position, Quaternion rotation, int tick)
-    //{
-    //    if (IsServer)
-    //    {
-    //        SendAuthoritativeStateClientRpc(transform.position, transform.rotation, tick);
-    //    }
-    //}
+    [Rpc(SendTo.Server)]
+    private void SendStateToServerServerRpc(BallState clientState, int tick)
+    {
+        if (!serverStateBuffer.TryGet(tick, out var serverState)) return;
 
-    //[Rpc(SendTo.ClientsAndHost)]
-    //private void SendAuthoritativeStateClientRpc(Vector3 serverPos, Quaternion serverRot, int tick)
-    //{
-    //    if (!IsOwner) return;
+        float positionError = (serverState.position - clientState.position).sqrMagnitude;
 
-    //    BallState predicted = stateBuffer.Get(tick);
-    //    float positionError = (predicted.position - serverPos).sqrMagnitude;
-    //    float rotationError = Quaternion.Angle(predicted.rotation, serverRot);
+        if (positionError > reconciliationThreshold)
+        {
+            SendToReconcileClientRpc(serverState);
+        }
+    }
 
-    //    if (positionError > reconciliationThreshold || rotationError > rotationThresholdDegrees)
-    //    {
-    //        // Optionally use interpolation here for smoothing
-    //        rb.position = serverPos;
-    //        rb.rotation = serverRot;
-    //        rb.linearVelocity = Vector3.zero;
-    //        rb.angularVelocity = Vector3.zero;
-    //    }
-    //}
+    [Rpc(SendTo.ClientsAndHost)]
+    private void SendToReconcileClientRpc(BallState serverState)
+    {
+        if (!IsOwner) return;
+
+        rb.position = serverState.position;
+        rb.linearVelocity = serverState.velocity;
+        rb.angularVelocity = serverState.angularVelocity;
+    }
 
     public void Stopball()
     {
@@ -114,11 +136,6 @@ public class BallNetworked : NetworkBehaviour
     public void HitBallServerRpc(Vector3 direction, float power)
     {
         HitBall(direction, power);
-    }
-
-    void Update()
-    {
-        playerCollision = rb.linearVelocity.sqrMagnitude > 1f;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -168,10 +185,18 @@ public class BallNetworked : NetworkBehaviour
     }
 }
 
-public struct BallState
+public struct BallState : INetworkSerializable
 {
+    public int tick;
     public Vector3 position;
-    public Quaternion rotation;
     public Vector3 velocity;
     public Vector3 angularVelocity;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref tick);
+        serializer.SerializeValue(ref position);
+        serializer.SerializeValue(ref velocity);
+        serializer.SerializeValue(ref angularVelocity);
+    }
 }

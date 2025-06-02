@@ -231,8 +231,7 @@ GameObject:
   - component: {fileID: 2203043003860383770}
   - component: {fileID: 2806211599765748147}
   - component: {fileID: 3918469419821694202}
-  - component: {fileID: 526743297852827478}
-  - component: {fileID: 1566652725180971707}
+  - component: {fileID: 2553668176105626761}
   m_Layer: 8
   m_Name: Ball
   m_TagString: Ball
@@ -399,16 +398,17 @@ MonoBehaviour:
   playerCollision: 0
   ballAimPreview: {fileID: 5099914188753898267}
   aimRotation: {fileID: 8816546352573064886}
+  networkTransform: {fileID: 2553668176105626761}
   bufferSize: 1024
-  tickRate: 60
---- !u!114 &526743297852827478
+  tickRate: 30
+--- !u!114 &2553668176105626761
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6864546094918944333}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
@@ -447,20 +447,3 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1566652725180971707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6864546094918944333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
