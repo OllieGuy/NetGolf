@@ -16,14 +16,12 @@ public class PlayerAimBall : PlayerBaseState
     private Rigidbody ballRb;
     private BallAimPreview ballAp;
     private float aimPower;
-    private float yAim;
 
     BallNetworked networkBall;
 
     public void SetBall(GameObject ball)
     {
         aimPower = defaultAimPower;
-        yAim = defaultYAim;
 
         ballGameObj = ball;
         ballRb = ballGameObj.GetComponent<Rigidbody>();
@@ -32,11 +30,12 @@ public class PlayerAimBall : PlayerBaseState
         ballAp = networkBall.BallAimPreview;
         ballAp.gameObject.SetActive(true);
         ballAp.Initialise(maxPower);
-        Vector3 startDirection = fpCamera.transform.forward;
-        startDirection.y = 0;
-        startDirection.Normalize();
         networkBall.Stopball();
-        ballGameObj.transform.rotation = Quaternion.LookRotation(startDirection);
+        Vector3 camForward = fpCamera.transform.forward;
+        camForward.y = defaultYAim;
+        camForward.Normalize();
+        Quaternion lookRotation = Quaternion.LookRotation(camForward);
+        networkBall.SetAim(lookRotation.eulerAngles);
     }
 
     public override void StartState()
@@ -105,7 +104,7 @@ public class PlayerAimBall : PlayerBaseState
     {
         if (networkBall != null && networkBall.IsOwner)
         {
-            networkBall.HitBallServerRpc(aimPower);
+            networkBall.HitBallServerRpc(networkBall.BallAimDirection, aimPower);
             ballAp.gameObject.SetActive(false);
         }
     }

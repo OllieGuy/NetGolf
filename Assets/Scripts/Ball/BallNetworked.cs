@@ -17,10 +17,10 @@ public class BallNetworked : NetworkBehaviour
     public bool Hittable => rb.linearVelocity.sqrMagnitude < 0.1f;
 
     // Prediction and reconciliation
-    private CircularBuffer<BallState> stateBuffer;
-    private NetworkTimer networkTimer;
-    private const float reconciliationThreshold = 0.01f;
-    private const float rotationThresholdDegrees = 1f;
+    //private CircularBuffer<BallState> stateBuffer;
+    //private NetworkTimer networkTimer;
+    //private const float reconciliationThreshold = 0.01f;
+    //private const float rotationThresholdDegrees = 1f;
 
     [SerializeField] private int bufferSize = 1024;
     [SerializeField] private float tickRate = 60f;
@@ -32,61 +32,61 @@ public class BallNetworked : NetworkBehaviour
         baseAngularDrag = rb.angularDamping;
         currentGroundMaterial = null;
 
-        stateBuffer = new CircularBuffer<BallState>(bufferSize);
-        networkTimer = new NetworkTimer(tickRate);
+        //stateBuffer = new CircularBuffer<BallState>(bufferSize);
+        //networkTimer = new NetworkTimer(tickRate);
     }
 
     private void FixedUpdate()
     {
-        if (IsOwner)
-        {
-            networkTimer.Update(Time.fixedDeltaTime);
-            if (networkTimer.ShouldTick())
-            {
-                int tick = networkTimer.CurrentTick;
+        //if (IsOwner)
+        //{
+        //    networkTimer.Update(Time.fixedDeltaTime);
+        //    if (networkTimer.ShouldTick())
+        //    {
+        //        int tick = networkTimer.CurrentTick;
 
-                // Predict
-                BallState predictedState = new BallState
-                {
-                    position = transform.position,
-                    rotation = transform.rotation,
-                    velocity = rb.linearVelocity,
-                    angularVelocity = rb.angularVelocity
-                };
+        //        // Predict
+        //        BallState predictedState = new BallState
+        //        {
+        //            position = transform.position,
+        //            rotation = transform.rotation,
+        //            velocity = rb.linearVelocity,
+        //            angularVelocity = rb.angularVelocity
+        //        };
 
-                stateBuffer.Add(predictedState, tick);
-                SendStateToServerServerRpc(predictedState.position, predictedState.rotation, tick);
-            }
-        }
+        //        stateBuffer.Add(predictedState, tick);
+        //        SendStateToServerServerRpc(predictedState.position, predictedState.rotation, tick);
+        //    }
+        //}
     }
 
-    [Rpc(SendTo.Server)]
-    private void SendStateToServerServerRpc(Vector3 position, Quaternion rotation, int tick)
-    {
-        if (IsServer)
-        {
-            SendAuthoritativeStateClientRpc(transform.position, transform.rotation, tick);
-        }
-    }
+    //[Rpc(SendTo.Server)]
+    //private void SendStateToServerServerRpc(Vector3 position, Quaternion rotation, int tick)
+    //{
+    //    if (IsServer)
+    //    {
+    //        SendAuthoritativeStateClientRpc(transform.position, transform.rotation, tick);
+    //    }
+    //}
 
-    [Rpc(SendTo.ClientsAndHost)]
-    private void SendAuthoritativeStateClientRpc(Vector3 serverPos, Quaternion serverRot, int tick)
-    {
-        if (!IsOwner) return;
+    //[Rpc(SendTo.ClientsAndHost)]
+    //private void SendAuthoritativeStateClientRpc(Vector3 serverPos, Quaternion serverRot, int tick)
+    //{
+    //    if (!IsOwner) return;
 
-        BallState predicted = stateBuffer.Get(tick);
-        float positionError = (predicted.position - serverPos).sqrMagnitude;
-        float rotationError = Quaternion.Angle(predicted.rotation, serverRot);
+    //    BallState predicted = stateBuffer.Get(tick);
+    //    float positionError = (predicted.position - serverPos).sqrMagnitude;
+    //    float rotationError = Quaternion.Angle(predicted.rotation, serverRot);
 
-        if (positionError > reconciliationThreshold || rotationError > rotationThresholdDegrees)
-        {
-            // Optionally use interpolation here for smoothing
-            rb.position = serverPos;
-            rb.rotation = serverRot;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-    }
+    //    if (positionError > reconciliationThreshold || rotationError > rotationThresholdDegrees)
+    //    {
+    //        // Optionally use interpolation here for smoothing
+    //        rb.position = serverPos;
+    //        rb.rotation = serverRot;
+    //        rb.linearVelocity = Vector3.zero;
+    //        rb.angularVelocity = Vector3.zero;
+    //    }
+    //}
 
     public void Stopball()
     {
@@ -100,16 +100,20 @@ public class BallNetworked : NetworkBehaviour
         rb.AddForce(direction * power, ForceMode.Impulse);
     }
 
+    public void SetAim(Vector3 eulers)
+    {
+        aimRotation.rotation = Quaternion.Euler(eulers);
+    }
+    
     public void RotateAim(Vector3 eulers)
     {
         aimRotation.rotation = Quaternion.Euler(aimRotation.rotation.eulerAngles + eulers);
-        Debug.DrawRay(transform.position, aimRotation.transform.forward, Color.green);
     }
 
     [Rpc(SendTo.Server)]
-    public void HitBallServerRpc(float power)
+    public void HitBallServerRpc(Vector3 direction, float power)
     {
-        HitBall(aimRotation.forward, power);
+        HitBall(direction, power);
     }
 
     void Update()
