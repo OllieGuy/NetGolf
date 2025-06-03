@@ -108,6 +108,7 @@ public class BallNetworked : NetworkBehaviour
         rb.position = serverState.position;
         rb.linearVelocity = serverState.velocity;
         rb.angularVelocity = serverState.angularVelocity;
+        rb.isKinematic = false;
     }
 
     public void Stopball()
