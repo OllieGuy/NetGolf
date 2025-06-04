@@ -33,7 +33,10 @@ public class PlayerRagdoll : PlayerBaseState
         Vector3 ragdollPos = ragdollController.RagdollBase.position;
         //playerMesh.transform.position = ragdollPos;
 
-        if (timer > ragdollDuration) ChangeState(PlayerStates.BaseMovement);
+        if (timer > ragdollDuration)
+        {
+            ChangeState(PlayerStates.BaseMovement);
+        }
     }
 
     public void OnGetUpFinished()
@@ -49,7 +52,9 @@ public class PlayerRagdoll : PlayerBaseState
         force = Vector3.zero;
         hitPoint = Vector3.zero;
 
-        ragdollController.SetRagdoll(false);
+        ragdollController.SetRagdoll(false); 
+        playerAnimator.Rebind();
+        playerAnimator.Update(0f);
 
         charController.enabled = false;
         charController.transform.position = new Vector3(
@@ -60,5 +65,6 @@ public class PlayerRagdoll : PlayerBaseState
         charController.transform.rotation = Quaternion.Euler(0, ragdollController.RagdollBase.rotation.y, 0);
 
         playerAnimator.SetTrigger("GetUp");
+        Debug.Log("i should get up");
     }
 }
